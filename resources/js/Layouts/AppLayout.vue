@@ -14,9 +14,9 @@ defineProps({
 
 const menu = [
     {
-        name : "Dashboard",
-        url: route("dashboard"),
-        route: "dashboard",
+        name : "Home",
+        url: route("home.index"),
+        route: "home.index",
         when: () => usePage().props.auth.user
     },
     {
@@ -53,14 +53,14 @@ const logout = () => {
         <Banner />
 
         <div class="min-h-screen bg-gray-100">
-            <nav class="bg-white border-b border-gray-100">
+            <nav class="bg-white border-b border-gray-100 sticky top-0 z-40">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('home.index')">
                                     <ApplicationMark class="block h-9 w-auto" />
                                 </Link>
                             </div>
@@ -162,8 +162,8 @@ const logout = () => {
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
+                        <ResponsiveNavLink :href="route('home.index')" :active="route().current('home.index')">
+                            Home
                         </ResponsiveNavLink>
                     </div>
 

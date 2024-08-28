@@ -20,9 +20,9 @@ it('allows unliking a likeable', function (Model $likeable) {
     $like = Like::factory()->for($user)->for($likeable, 'likeable')->create();
 
     actingAs($user)
-        ->fromRoute('dashboard')
+        ->fromRoute('home.index')
         ->delete(route('likes.destroy', [$likeable->getMorphClass(), $likeable->id]))
-        ->assertRedirect(route('dashboard'));
+        ->assertRedirect(route('home.index'));
 
 
     $this->assertDatabaseEmpty(Like::class);
