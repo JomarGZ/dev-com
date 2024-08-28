@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Profile;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -66,5 +67,10 @@ class UserFactory extends Factory
                 ->when(is_callable($callback), $callback),
             'ownedTeams'
         );
+    }
+
+    public function withProfile(): static
+    {
+        return $this->has(Profile::factory());
     }
 }
