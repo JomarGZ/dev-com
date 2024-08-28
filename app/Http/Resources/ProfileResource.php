@@ -15,13 +15,13 @@ class ProfileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'user' => UserResource::make($this->whenLoaded('user')),
             'headline' => $this->headline,
             'about_me' => $this->about_me,
             'banner_photo_url' => $this->banner_photo_url,
             'country' => $this->country,
             'city' => $this->city,
             'phone' => $this->phone,
+            'user' => UserResource::make($this->whenLoaded('user')),
         ];
     }
 }
