@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
@@ -8,6 +8,8 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import ConfirmationModalWrapper from '@/Components/ConfirmationModalWrapper.vue';
+import TextInput from '@/Components/TextInput.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 defineProps({
     title: String,
 });
@@ -29,6 +31,12 @@ const menu = [
         url: route('posts.create'),
         route: 'posts.create',
         when: () => usePage().props.permissions.create_posts
+    },
+    {
+        name : "Networks",
+        url: route('user.index'),
+        route: 'user.index',
+        when: () => usePage().props.permissions.create_posts
     }
 ];
 const showingNavigationDropdown = ref(false);
@@ -44,6 +52,14 @@ const switchToTeam = (team) => {
 const logout = () => {
     router.post(route('logout'));
 };
+
+const searchForm = useForm({
+    query: ''
+})
+
+const search = () => {
+    searchForm.get(route('user.index'));
+}
 </script>
 
 <template>
@@ -63,6 +79,12 @@ const logout = () => {
                                 <Link :href="route('home.index')">
                                     <ApplicationMark class="block h-9 w-auto" />
                                 </Link>
+                                <form @submit.prevent="search">
+                                    <div>
+                                        <TextInput v-model="searchForm.query"/>
+                                        <SecondaryButton type="submit">Search</SecondaryButton>
+                                    </div>
+                                </form>
                             </div>
 
                             <!-- Navigation Links -->
@@ -104,7 +126,7 @@ const logout = () => {
                                             Manage Account
                                         </div>
 
-                                        <DropdownLink :href="route('profile.show')">
+                                        <DropdownLink :href="route('user.show', {id: $page.props.auth.user.id})">
                                             Profile
                                         </DropdownLink>
 

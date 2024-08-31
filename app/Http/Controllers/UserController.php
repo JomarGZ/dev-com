@@ -2,31 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PostResource;
-use App\Http\Resources\ProfileResource;
 use App\Http\Resources\UserResource;
-use App\Models\Post;
-use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class HomeController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $user = User::findOrFail(request()->user()->id);
+        $query = trim(request()->query('query'));
+        $users = null;
 
-        $user->load('profile');
-        $posts = Post::latest()->latest('id')->paginate();
+        if ($query) {
+            $users = User::where('name', 'like', '%' . $query . '%')->paginate();
+        }
 
-        $posts->load(['user', 'topic']);
-        return inertia('Home', [
-            'user' => UserResource::make($user),
-            'posts' => fn () => $posts ? PostResource::collection($posts) : null,
-            'title' => 'Home'
+        return inertia('Profile/Index',[
+            'users' => fn () => (isset($users) && !empty($users)) ? UserResource::collection($users) : null,
+            'title' => 'Networks'
         ]);
     }
 
@@ -49,15 +46,17 @@ class HomeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        //
+        return inertia('Profile/Show', [
+            'user' => UserResource::make($user)
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
         //
     }
@@ -65,7 +64,7 @@ class HomeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
         //
     }
@@ -73,7 +72,7 @@ class HomeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
         //
     }

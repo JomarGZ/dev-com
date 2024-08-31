@@ -21,7 +21,10 @@ class UserResource extends JsonResource
             'profile_photo_path' => $this->profile_photo_path,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'profile' => ProfileResource::make($this->whenLoaded('profile'))
+            'profile' => ProfileResource::make($this->whenLoaded('profile')),
+            'can' => [
+                'edit' => $this->id === $request->user()?->id ? true : false
+            ]
         ];
     }
 }

@@ -4,6 +4,9 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,6 +37,9 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
+
+    Route::get('users', [UserController::class, 'index'])->name('user.index');
+    Route::get('users/{user}', [UserController::class, 'show'])->name('user.show');
 
     Route::resource('posts', PostController::class)->only(['store', 'create']);
     Route::resource('posts.comments', CommentController::class)->shallow()->only(['store', 'destroy', 'update']);
