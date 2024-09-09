@@ -17,8 +17,8 @@ defineProps({
 const menu = [
     {
         name : "Home",
-        url: route("home.index"),
-        route: "home.index",
+        url: route("home"),
+        route: "home",
         when: () => usePage().props.auth.user
     },
     {
@@ -76,7 +76,7 @@ const search = () => {
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('home.index')">
+                                <Link :href="route('home')">
                                     <ApplicationMark class="block h-9 w-auto" />
                                 </Link>
                                 <form @submit.prevent="search">
@@ -122,11 +122,11 @@ const search = () => {
 
                                     <template #content>
                                         <!-- Account Management -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
+                                        <div class="block px-4 py-2 text-xs text-gray-400"> 
                                             Manage Account
                                         </div>
 
-                                        <DropdownLink :href="route('user.show', {id: $page.props.auth.user.id})">
+                                        <DropdownLink :href="route('profile.show', {id: $page.props.auth.user.id})">
                                             Profile
                                         </DropdownLink>
 
@@ -184,7 +184,7 @@ const search = () => {
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('home.index')" :active="route().current('home.index')">
+                        <ResponsiveNavLink :href="route('home')" :active="route().current('home')">
                             Home
                         </ResponsiveNavLink>
                     </div>
@@ -207,7 +207,7 @@ const search = () => {
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">
+                            <ResponsiveNavLink :href="route('profile.show', {id: $page.props.auth.user.id})" :active="route().current('profile.show')">
                                 Profile
                             </ResponsiveNavLink>
 
@@ -274,7 +274,7 @@ const search = () => {
             </header>
 
             <!-- Page Content -->
-            <main>
+            <main class="px-[10%] mt-2 p-[5px]">
                 <slot />
             </main>
         </div>

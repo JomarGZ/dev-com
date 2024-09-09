@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('headline')->nullable();
             $table->longText('about_me')->nullable();
             $table->string('banner_photo_url')->nullable();
+            $table->integer('country_id')->nullable();
+            $table->integer('city_id')->nullable();
             $table->string('country')->nullable();
             $table->string('city')->nullable();
             $table->string('phone')->nullable();

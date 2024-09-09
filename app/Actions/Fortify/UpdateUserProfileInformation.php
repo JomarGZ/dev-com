@@ -4,6 +4,8 @@ namespace App\Actions\Fortify;
 
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
@@ -31,10 +33,21 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user instanceof MustVerifyEmail) {
             $this->updateVerifiedUser($user, $input);
         } else {
-            $user->forceFill([
-                'name' => $input['name'],
-                'email' => $input['email'],
-            ])->save();
+            DB::transaction(function () use ($input, $user) {
+                $user->forceFill([
+                    'name' => $input['name'],
+                    'email' => $input['email'],
+                ])->save();
+                $user->load('profile');
+                $user->profile()->updateOrCreate(
+                    ['user_id' => $input['user_id']],
+                    [
+                        'headline' => $input['headline'],
+                        'about_me' => $input['about_me'],
+                        'country_id' => $input['country_id'],
+                        'city_id' => $input['city_id'],
+                    ]);
+            });
         }
     }
 

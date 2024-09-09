@@ -1,11 +1,11 @@
 
 <template>
     <AppLayout :title="title">
-        <div class="flex flex-wrap justify-between p-[20px] px-[6%]">
+        <div class="flex flex-wrap justify-between">
             <div class="flex-[0_0_25%] self-start sticky top-[73px]">
                 <SectionWrapper>
                         <img src="https://picsum.photos/seed/picsum/200/100" class="w-full">
-                        <div v-if="user" class="px-[25px] py-0">
+                        <div class="px-[25px] py-0">
                             <img src="https://picsum.photos/90/90" class="w-[90px] h-[90px] rounded-full bg-white p-[4px] mt-[-45px]">
                             <h1 class="text-[20px] font-semibold text-[#222]">{{ user.name }}</h1>
                             <h3 class="text-[14px] font-medium text-[#777]">{{ user.profile.headline }}</h3>
@@ -121,5 +121,5 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 
 const props = defineProps(['user', 'posts', 'title']);
 
-
+ 
 </script>

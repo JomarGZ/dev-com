@@ -2,13 +2,13 @@
 
 <template>
    <AppLayout :title="title">
-    <div class="container0 flex justify-center items-center w-full box-border mt-3">
-      <div class="container min-w-0 max-w-screen-xl flex justify-center mx-auto">
-        <div class="sidebar bg-white py-2.5 px-0 flex flex-col basis-1/4 h-fit rounded-lg">
-          <div class="heading mx-3">
+    <div class="flex justify-center items-center w-full box-border">
+      <div class=" min-w-0 max-w-screen-xl flex justify-center mx-auto">
+        <div class=" bg-white py-2.5 px-0 flex flex-col basis-1/4 h-fit rounded-lg">
+          <div class=" mx-3">
             <h1 class="text-lg font-medium">Manage my network</h1>
           </div>
-          <div class="reference-links border-b-2 border-gray-200 py-2 px-5">
+          <div class="-links border-b-2 border-gray-200 py-2 px-5">
             <ul class="list-none text-sm font-light">
               <li class="my-4">
                 <a href="#" class="flex justify-between">
@@ -84,7 +84,7 @@
                     <img src="https://picsum.photos/seed/picsum/60/60" class="w-15 h-15 mr-2.5" />
                     <div class="profile-user flex flex-col justify-center">
                     <h1 class="text-lg">
-                        <Link :href="route('user.show', {id: user.id})">
+                        <Link :href="route('profile.show', {id: user.id})">
                             {{ user.name }}
                         </Link>
                     </h1>

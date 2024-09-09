@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { Link, router, useForm } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
+import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import FormSection from '@/Components/FormSection.vue';
 import InputError from '@/Components/InputError.vue';
@@ -11,6 +11,7 @@ import TextInput from '@/Components/TextInput.vue';
 
 const props = defineProps({
     user: Object,
+    countries: Object
 });
 
 const form = useForm({
@@ -18,11 +19,38 @@ const form = useForm({
     name: props.user.name,
     email: props.user.email,
     photo: null,
+    headline: props.user.profile.headline,
+    about_me:  props.user.profile.about_me,
+    banner_photo_url: null,
+    country_id: props.user.profile.country_id,
+    city_id: props.user.profile.city_id,
+    phone : props.user.profile.phone,
+    user_id : props.user.id
 });
-
 const verificationLinkSent = ref(null);
 const photoPreview = ref(null);
 const photoInput = ref(null);
+const cities = ref(usePage().props.cities);
+const fetchCities = async (countryId) => {
+      if (countryId) {
+        try {
+          const response = await axios.get(route('get.cities'), {
+            params: { country_id: countryId }
+          })
+          cities.value = response.data
+         
+        } catch (error) {
+          console.error('Error fetching cities:', error)
+          cities.value = []
+        }
+      } else {
+        cities.value = []
+      }
+      form.city_id = null;
+    }
+watch(() => form.country_id, (newCountryId) => {
+    fetchCities(newCountryId)
+})
 
 const updateProfileInformation = () => {
     if (photoInput.value) {
@@ -173,6 +201,61 @@ const clearPhotoFileInput = () => {
                         A new verification link has been sent to your email address.
                     </div>
                 </div>
+            </div>
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="headline" value="Headline" />
+                <TextInput
+                    id="headline"
+                    v-model="form.headline"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                    autocomplete="headline"
+                />
+                <InputError :message="form.errors.headline" class="mt-2" />
+            </div>
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="phone" value="Phone" />
+                <TextInput
+                    id="phone"
+                    v-model="form.phone"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                    autocomplete="headline"
+                />
+                <InputError :message="form.errors.headline" class="mt-2" />
+            </div>
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="country" value="Country" />
+                <select class="mt-1 block w-full" v-model="form.country_id"> 
+                    <option :value="null">--Select Country--</option>
+                    <option 
+                        v-for="country in props.countries" 
+                        :key="country.id" 
+                        :value="country.id"
+                        >{{ country.name }}</option>
+                </select>
+                <InputError :message="form.errors.country" class="mt-2" />
+            </div>
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="city" value="City" />
+                <select class="mt-1 block w-full" v-model="form.city_id" > 
+                    <option :value="null">--Select City--</option>
+                    <option 
+                        v-for="city in cities" 
+                        :key="city.id" 
+                        :value="city.id"
+                            >{{ city.name }}</option>
+                </select>
+                <InputError :message="form.errors.city" class="mt-2" />
+            </div>
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="about_me" value="About Me" />
+                <textarea v-model="form.about_me" class="mt-1 block w-full" >
+
+                </textarea>
+                <InputError :message="form.errors.headline" class="mt-2" />
             </div>
         </template>
 

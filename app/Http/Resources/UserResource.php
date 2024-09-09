@@ -7,6 +7,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
+    private $defaultProfile = [
+        'headline' => null,
+        'about_me' => null,
+        'banner_photo_url' => null,
+        'address' => null,
+        'phone' => null,
+        'user' => null,
+    ];
     /**
      * Transform the resource into an array.
      *
@@ -14,6 +22,9 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $loadedProfile = $this->whenLoaded('profile');
+        $profile = $loadedProfile ? ProfileResource::make($loadedProfile) : $this->defaultProfile;
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -21,7 +32,7 @@ class UserResource extends JsonResource
             'profile_photo_path' => $this->profile_photo_path,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'profile' => ProfileResource::make($this->whenLoaded('profile')),
+            'profile' => $profile,
             'can' => [
                 'edit' => $this->id === $request->user()?->id ? true : false
             ]
