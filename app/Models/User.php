@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
+use Str;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -87,5 +88,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Like::class);
     }
 
-         
+    public function showRoute($parameters = []) 
+    {
+        return route('profile.show', [$this, Str::slug($this->name), ...$parameters]);
+    }
 }

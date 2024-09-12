@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
@@ -8,6 +8,8 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import ConfirmationModalWrapper from '@/Components/ConfirmationModalWrapper.vue';
+import TextInput from '@/Components/TextInput.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 defineProps({
     title: String,
 });
@@ -15,8 +17,8 @@ defineProps({
 const menu = [
     {
         name : "Home",
-        url: route("home.index"),
-        route: "home.index",
+        url: route("home"),
+        route: "home",
         when: () => usePage().props.auth.user
     },
     {
@@ -28,6 +30,12 @@ const menu = [
         name : "Create a Post",
         url: route('posts.create'),
         route: 'posts.create',
+        when: () => usePage().props.permissions.create_posts
+    },
+    {
+        name : "Networks",
+        url: route('user.index'),
+        route: 'user.index',
         when: () => usePage().props.permissions.create_posts
     }
 ];
@@ -44,6 +52,14 @@ const switchToTeam = (team) => {
 const logout = () => {
     router.post(route('logout'));
 };
+
+const searchForm = useForm({
+    query: ''
+})
+
+const search = () => {
+    searchForm.get(route('user.index'));
+}
 </script>
 
 <template>
@@ -60,9 +76,15 @@ const logout = () => {
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('home.index')">
+                                <Link :href="route('home')">
                                     <ApplicationMark class="block h-9 w-auto" />
                                 </Link>
+                                <form @submit.prevent="search">
+                                    <div>
+                                        <TextInput v-model="searchForm.query"/>
+                                        <SecondaryButton type="submit">Search</SecondaryButton>
+                                    </div>
+                                </form>
                             </div>
 
                             <!-- Navigation Links -->
@@ -100,11 +122,11 @@ const logout = () => {
 
                                     <template #content>
                                         <!-- Account Management -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
+                                        <div class="block px-4 py-2 text-xs text-gray-400"> 
                                             Manage Account
                                         </div>
 
-                                        <DropdownLink :href="route('profile.show')">
+                                        <DropdownLink :href="$page.props.auth.user.profile.links.show">
                                             Profile
                                         </DropdownLink>
 
@@ -162,7 +184,7 @@ const logout = () => {
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('home.index')" :active="route().current('home.index')">
+                        <ResponsiveNavLink :href="route('home')" :active="route().current('home')">
                             Home
                         </ResponsiveNavLink>
                     </div>
@@ -185,7 +207,7 @@ const logout = () => {
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">
+                            <ResponsiveNavLink :active="route().current('profile.show')">
                                 Profile
                             </ResponsiveNavLink>
 
@@ -252,7 +274,7 @@ const logout = () => {
             </header>
 
             <!-- Page Content -->
-            <main>
+            <main class="px-[10%] mt-2 p-[5px]">
                 <slot />
             </main>
         </div>

@@ -37,7 +37,25 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+        if ($user) {
+            $user->load('profile');
+        }
         return array_merge(parent::share($request), [
+            'auth' => [
+                'user' => $user ? array_merge($user->toArray(), [
+                    'profile' => [
+                        'headline' => $user->profile->headline ?? null,
+                        'country_id' => $user->profile->country_id ?? null,
+                        'city_id' => $user->profile->city_id ?? null,
+                        'about_me' => $user->profile->about_me ?? null,
+                        'phone' => $user->profile->phone ?? null,
+                        'links' => [
+                            'show' => $user->showRoute()
+                        ]
+                    ]
+                ]) : null
+            ],
             'permissions' => [
                 'create_posts' => $request->user()?->can('create', Post::class)
             ]
