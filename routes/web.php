@@ -1,16 +1,13 @@
 <?php
 
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LikeController;
 use App\Http\Controllers\LocationController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\User\CommentController;
+use App\Http\Controllers\User\LikeController;
+use App\Http\Controllers\User\PostController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +38,7 @@ Route::middleware([
 
     Route::get('users', [UserController::class, 'index'])->name('user.index');
     Route::get('users/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::get('users/{user}', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('users/{user}/{slug?}', [ProfileController::class, 'show'])->name('profile.show');
 
     Route::resource('posts', PostController::class)->only(['store', 'create']);
     Route::resource('posts.comments', CommentController::class)->shallow()->only(['store', 'destroy', 'update']);

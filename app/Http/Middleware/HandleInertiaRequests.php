@@ -50,6 +50,9 @@ class HandleInertiaRequests extends Middleware
                         'city_id' => $user->profile->city_id ?? null,
                         'about_me' => $user->profile->about_me ?? null,
                         'phone' => $user->profile->phone ?? null,
+                        'links' => [
+                            'show' => $user->showRoute()
+                        ]
                     ]
                 ]) : null
             ],

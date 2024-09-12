@@ -29,12 +29,9 @@ class ProfileFactory extends Factory
             'user_id' => User::factory(),
             'headline' => fake()->randomElement($headlines),
             'about_me' => Collection::times(3, fn () => fake()->realText(200))->join(PHP_EOL.PHP_EOL),
-            'banner_photo_url' => null,
-            'country' => 'Philippines',
-            'city' => 'Lapu-Lapu City',
             'phone' => fake()->phoneNumber(),
             'country_id' => 174,
-            'city_id' => 84115
+            'city_id' => 84115,
         ];
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
-use App\Http\Resources\ProfileResource;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\Profile;
 use App\Models\User;
@@ -10,22 +10,16 @@ use App\Services\LocationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Laravel\Fortify\Features;
 use Laravel\Jetstream\Agent;
 use Laravel\Jetstream\Http\Controllers\Inertia\Concerns\ConfirmsTwoFactorAuthentication;
 use Laravel\Jetstream\Jetstream;
 use Nnjeim\World\World;
-use Nnjeim\World\WorldHelper;
-
+use Illuminate\Support\Str;
 class ProfileController extends Controller
 {
     use ConfirmsTwoFactorAuthentication;
-    protected $world;
-    public function __construct(WorldHelper $world)
-    {
-        $this->world = $world;
-    }
+
     /**
      * Display a listing of the resource.
      */
@@ -53,12 +47,15 @@ class ProfileController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Request $request, User $user)
     {
-        
+       if (! Str::endsWith($user->showRoute(), $request->path())) {
+            return redirect($user->showRoute($request->query()), 301);
+       }
         $user->load('profile');
         return inertia('Profile/Show', [
-            'user' => UserResource::make($user)
+            'user' => UserResource::make($user),
+            'title' => Str::slug($user->name)
         ]);
     }
 
@@ -68,23 +65,13 @@ class ProfileController extends Controller
     public function edit(Request $request)
     {
         $this->validateTwoFactorAuthenticationState($request);
-        $action = World::Countries();
-        if ($action->success) {
-            $countries = $action->data;
-        }
+        $locationService = new LocationService;
+
+        $countries = $locationService->countries();
 
         $countryId = isset($request->user()->profile->country_id) ? $request->user()->profile->country_id : null;
-        
-        if ($countryId) {
-            $action = $this->world->cities([
-                'filters' => [
-                    'country_id' => $countryId
-                ],
-            ]);
-            if ($action->success) {
-                $cities = $action->data;
-            }
-        }
+       
+        $cities = $locationService->citiesByCountryId($countryId);
         return Jetstream::inertia()->render($request, 'Profile/Edit', [
             'confirmsTwoFactorAuthentication' => Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm'),
             'sessions' => $this->sessions($request)->all(),

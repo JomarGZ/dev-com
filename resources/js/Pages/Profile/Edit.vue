@@ -27,6 +27,7 @@ defineProps({
                     <UpdateProfileInformationForm 
                         :user="$page.props.auth.user" 
                         :countries="$page.props.countries" 
+                        :cities="$page.props.cities"
                         />
 
                     <SectionBorder />

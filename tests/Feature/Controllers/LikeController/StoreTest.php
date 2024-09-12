@@ -18,9 +18,9 @@ it('allows liking a likeable', function (Model $likeable) {
     $user = User::factory()->create();
 
     actingAs($user)
-        ->fromRoute('home.index')
+        ->fromRoute('home')
         ->post(route('likes.store', [$likeable->getMorphClass(), $likeable->id]))
-        ->assertRedirect(route('home.index'));
+        ->assertRedirect(route('home'));
 
 
     $this->assertDatabaseHas(Like::class, [

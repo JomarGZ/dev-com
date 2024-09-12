@@ -1,7 +1,6 @@
 
 <template>
-   <AppLayout>
-     
+   <AppLayout :title="slugifiedName">
            <!-- Profile Header -->
      <!-- Profile Header -->
      <div class="flex flex-wrap mx-auto">
@@ -155,6 +154,9 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Link } from '@inertiajs/vue3';
-
+import slugify from 'slugify';
+import { computed } from 'vue';
 const props = defineProps(['user']);
+
+const slugifiedName = computed(() => slugify(props.user.name));
 </script>

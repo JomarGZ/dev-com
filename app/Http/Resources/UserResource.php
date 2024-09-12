@@ -35,6 +35,9 @@ class UserResource extends JsonResource
             'profile' => $profile,
             'can' => [
                 'edit' => $this->id === $request->user()?->id ? true : false
+            ],
+            'links' => [
+                'show' => $this->showRoute()
             ]
         ];
     }

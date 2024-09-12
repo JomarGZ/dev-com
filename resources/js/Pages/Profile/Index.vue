@@ -84,7 +84,7 @@
                     <img src="https://picsum.photos/seed/picsum/60/60" class="w-15 h-15 mr-2.5" />
                     <div class="profile-user flex flex-col justify-center">
                     <h1 class="text-lg">
-                        <Link :href="route('profile.show', {id: user.id})">
+                        <Link :href="user.links.show">
                             {{ user.name }}
                         </Link>
                     </h1>

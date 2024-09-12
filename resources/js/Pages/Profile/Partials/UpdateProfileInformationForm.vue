@@ -11,7 +11,8 @@ import TextInput from '@/Components/TextInput.vue';
 
 const props = defineProps({
     user: Object,
-    countries: Object
+    countries: Object,
+    cities:Array
 });
 
 const form = useForm({
@@ -30,7 +31,7 @@ const form = useForm({
 const verificationLinkSent = ref(null);
 const photoPreview = ref(null);
 const photoInput = ref(null);
-const cities = ref(usePage().props.cities);
+const cities = ref(props.cities);
 const fetchCities = async (countryId) => {
       if (countryId) {
         try {
@@ -224,7 +225,7 @@ const clearPhotoFileInput = () => {
                     required
                     autocomplete="headline"
                 />
-                <InputError :message="form.errors.headline" class="mt-2" />
+                <InputError :message="form.errors.phone" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="country" value="Country" />
@@ -236,7 +237,7 @@ const clearPhotoFileInput = () => {
                         :value="country.id"
                         >{{ country.name }}</option>
                 </select>
-                <InputError :message="form.errors.country" class="mt-2" />
+                <InputError :message="form.errors.country_id" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="city" value="City" />
@@ -248,14 +249,14 @@ const clearPhotoFileInput = () => {
                         :value="city.id"
                             >{{ city.name }}</option>
                 </select>
-                <InputError :message="form.errors.city" class="mt-2" />
+                <InputError :message="form.errors.city_id" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="about_me" value="About Me" />
                 <textarea v-model="form.about_me" class="mt-1 block w-full" >
 
                 </textarea>
-                <InputError :message="form.errors.headline" class="mt-2" />
+                <InputError :message="form.errors.about_me" class="mt-2" />
             </div>
         </template>
 

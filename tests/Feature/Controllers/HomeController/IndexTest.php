@@ -7,20 +7,25 @@ use App\Http\Resources\UserResource;
 use App\Models\Post;
 use App\Models\Profile;
 use App\Models\User;
+use Database\Seeders\WorldSeeder;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
+beforeEach( function () {
+    $this->seed(WorldSeeder::class);
+});
 it('requires authentication', function () {
-    get(route('home.index'))
+    get(route('home'))
         ->assertRedirect(route('login'));
 });
 
 it('has profile data in the view', function() {
+
     $user = User::factory()->withProfile()->create();
     $user->load('profile');
     actingAs($user)
-        ->get(route('home.index'))
+        ->get(route('home'))
         ->assertHasResource('user', UserResource::make($user));
 });
 
@@ -32,6 +37,6 @@ it('has paginated posts data in the view', function() {
     $posts->load(['user', 'topic']);
 
     actingAs($profile->user)
-        ->get(route('home.index'))
+        ->get(route('home'))
         ->assertHasPaginatedResource('posts', PostResource::collection($posts->reverse()));
 });

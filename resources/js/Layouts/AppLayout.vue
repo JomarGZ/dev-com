@@ -126,7 +126,7 @@ const search = () => {
                                             Manage Account
                                         </div>
 
-                                        <DropdownLink :href="route('profile.show', {id: $page.props.auth.user.id})">
+                                        <DropdownLink :href="$page.props.auth.user.profile.links.show">
                                             Profile
                                         </DropdownLink>
 
@@ -207,7 +207,7 @@ const search = () => {
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.show', {id: $page.props.auth.user.id})" :active="route().current('profile.show')">
+                            <ResponsiveNavLink :active="route().current('profile.show')">
                                 Profile
                             </ResponsiveNavLink>
 
