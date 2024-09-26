@@ -23,9 +23,9 @@ class ProfileController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+      
     }
 
     /**
@@ -53,9 +53,15 @@ class ProfileController extends Controller
             return redirect($user->showRoute($request->query()), 301);
        }
         $user->load('profile');
+
         return inertia('Profile/Show', [
             'user' => UserResource::make($user),
-            'title' => Str::slug($user->name)
+            'title' => Str::slug($user->name),
+            'status' => [
+                'isFriendWith' => auth()->user()->isFriendWith($user->id),
+                'friendRequestSentTo' => auth()->user()->hasPendingFriendRequestTo($user->id),
+                'friendRequestReceivedFrom' => auth()->user()->hasPendingFriendRequestFrom($user->id),
+            ]
         ]);
     }
 
@@ -134,13 +140,5 @@ class ProfileController extends Controller
         return tap(new Agent(), fn ($agent) => $agent->setUserAgent($session->user_agent));
     }
 
-    public function getStates ($country) 
-    {
-        return World::countries([
-            'fields' => 'states',
-            'filters' => [
-                'iso2' => 'FR'
-            ]
-        ]);
-    }
+  
 }

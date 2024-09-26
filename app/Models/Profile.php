@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
+use Laravel\Scout\Searchable;
 use Nnjeim\World\World;
 use Nnjeim\World\WorldHelper;
 
 class Profile extends Model
 {
     use HasFactory;
+    use Searchable;
     protected $guarded = [];
 
    

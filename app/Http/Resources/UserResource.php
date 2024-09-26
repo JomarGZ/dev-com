@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Friend;
+use App\Traits\Friendable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

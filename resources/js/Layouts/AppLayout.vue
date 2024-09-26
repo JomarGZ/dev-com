@@ -10,9 +10,11 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import ConfirmationModalWrapper from '@/Components/ConfirmationModalWrapper.vue';
 import TextInput from '@/Components/TextInput.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-defineProps({
-    title: String,
-});
+
+const props = defineProps({
+        title: String,
+        userQuery: String
+    });
 
 const menu = [
     {
@@ -34,8 +36,8 @@ const menu = [
     },
     {
         name : "Networks",
-        url: route('user.index'),
-        route: 'user.index',
+        url: route('friends.index'),
+        route: 'friends.index',
         when: () => usePage().props.permissions.create_posts
     }
 ];
@@ -54,17 +56,17 @@ const logout = () => {
 };
 
 const searchForm = useForm({
-    query: ''
+    userQuery: usePage().props.userQuery
 })
 
 const search = () => {
-    searchForm.get(route('user.index'));
+    searchForm.get(route('friends.index'));
 }
 </script>
 
 <template>
     <div>
-        <Head :title="title" />
+        <Head :title="props.title" />
 
         <Banner />
 
@@ -81,7 +83,7 @@ const search = () => {
                                 </Link>
                                 <form @submit.prevent="search">
                                     <div>
-                                        <TextInput v-model="searchForm.query"/>
+                                        <TextInput v-model="searchForm.userQuery"/>
                                         <SecondaryButton type="submit">Search</SecondaryButton>
                                     </div>
                                 </form>
@@ -207,7 +209,7 @@ const search = () => {
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :active="route().current('profile.show')">
+                            <ResponsiveNavLink :active="route().current('profiles.show')">
                                 Profile
                             </ResponsiveNavLink>
 

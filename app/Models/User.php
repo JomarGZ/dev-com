@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Friendable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
-use Str;
+use Illuminate\Support\Str;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -19,7 +21,10 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use Searchable;
+    use Friendable;
 
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -90,6 +95,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function showRoute($parameters = []) 
     {
-        return route('profile.show', [$this, Str::slug($this->name), ...$parameters]);
+        return route('profiles.show', [$this, Str::slug($this->name), ...$parameters]);
+    }
+
+    public function defaultProfilePhotoUrl() 
+    {
+        return asset('/storage/images/default-avatar.jpg');
     }
 }

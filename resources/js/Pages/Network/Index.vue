@@ -91,9 +91,8 @@
                     <h2 class="text-sm">Survey Researcher</h2>
                     </div>
                 </div>
-                <div v-if="! user.can.edit" class="response flex items-center gap-3">
-                    <button type="button" class="accept bg-[#376cff] text-white py-1 px-5 rounded-full font-semibold">Accept</button>
-                    <button type="button" class="reject bg-gray-200 text-black py-1 px-5 rounded-full font-semibold">Reject</button>
+                <div class="response flex items-center gap-3">
+                  <!-- <span class="text-green-600 bg-green-100 px-2 rounded-sm">Friend</span> -->
                 </div>
                 </div>
             </div>
@@ -112,8 +111,15 @@
    </AppLayout>
 </template>
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import { Link } from '@inertiajs/vue3';
+  import AppLayout from '@/Layouts/AppLayout.vue';
+  import { Link } from '@inertiajs/vue3';
+  import { ref } from 'vue';
 
-const props = defineProps(['title', 'users']);
+  const props = defineProps(['title', 'users']);
+
+
+  const toggleDropDown = (userId) => {
+    dropDownOpenId.value = dropDownOpenId.value === userId ? null : userId;
+  };
+
 </script>

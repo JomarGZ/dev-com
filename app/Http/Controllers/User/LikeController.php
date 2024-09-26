@@ -25,7 +25,7 @@ class LikeController extends Controller
             'user_id' => $request->user()->id
         ]);
 
-        $likeable->increment('likes_count');
+        $likeable->increment(column: 'likes_count');
         return back();
     }
 

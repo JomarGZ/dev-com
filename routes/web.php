@@ -3,6 +3,8 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\User\CommentController;
+use App\Http\Controllers\User\ConnectController;
+use App\Http\Controllers\User\FriendController;
 use App\Http\Controllers\User\LikeController;
 use App\Http\Controllers\User\PostController;
 use App\Http\Controllers\User\ProfileController;
@@ -36,17 +38,31 @@ Route::middleware([
 ])->group(function () {
     Route::get('/', HomeController::class)->name('home');
 
-    Route::get('users', [UserController::class, 'index'])->name('user.index');
-    Route::get('users/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::get('users/{user}/{slug?}', [ProfileController::class, 'show'])->name('profile.show');
+
+    Route::prefix('profiles')->name('profiles.')->group(function () {
+        Route::get('', [ProfileController::class, 'index'])->name('index');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::get('/{user}/{slug?}', [ProfileController::class, 'show'])->name('show');
+    });
+    Route::prefix('friends')->name('friends.')->group(function () {
+        Route::get('', [FriendController::class, 'index'])->name('index');
+        Route::post('{user}/add', [FriendController::class, 'store'])->name('store');
+        Route::put('{user}/accept', [FriendController::class, 'update'])->name('update');
+        Route::delete('{user}/delete', [FriendController::class, 'destroy'])->name('destroy');
+        Route::delete('{user}/deny', [FriendController::class, 'deny'])->name('deny');
+    });
 
     Route::resource('posts', PostController::class)->only(['store', 'create']);
     Route::resource('posts.comments', CommentController::class)->shallow()->only(['store', 'destroy', 'update']);
-
-    Route::post('/likes/{type}/{id}', [LikeController::class, 'store'])->name('likes.store');
-    Route::delete('/likes/{type}/{id}', [LikeController::class, 'destroy'])->name('likes.destroy');
+    
+    Route::prefix('likes')->name('likes.')->group(function () {
+        Route::post('/{type}/{id}', [LikeController::class, 'store'])->name('store');
+        Route::delete('/{type}/{id}', [LikeController::class, 'destroy'])->name('destroy');
+    });
     
     Route::get('cities', [LocationController::class, 'getCities'])->name('get.cities');
+
+
 });
 
 Route::get('posts/{topic?}', [PostController::class, 'index'])->name('posts.index');
