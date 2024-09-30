@@ -68,6 +68,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Profile::class);
     }
+
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'requester_id', 'user_requested_id')
+            ->withPivot('status')
+            ->orWhere(function($query){
+                $query->where('user_requested_id', $this->id);
+            });
+    }
+
     /**
      * Get all of the posts for the User
      *
@@ -93,6 +103,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Like::class);
     }
 
+
     public function showRoute($parameters = []) 
     {
         return route('profiles.show', [$this, Str::slug($this->name), ...$parameters]);
@@ -102,4 +113,5 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return asset('/storage/images/default-avatar.jpg');
     }
+
 }

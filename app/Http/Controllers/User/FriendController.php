@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Meilisearch\Client;
 
 class FriendController extends Controller
 {
@@ -14,6 +15,8 @@ class FriendController extends Controller
      */
     public function index(Request $request)
     {
+        // $meiliSearchClient = new Client('http://localhost:7700', 'test');
+        // $meiliSearchClient->index('users')->deleteAllDocuments();
         $query = $request->query('userQuery');
         if ($query) {
             $users = User::search($query)
@@ -43,7 +46,7 @@ class FriendController extends Controller
     {
         return auth()->user()->addFriend($user->id) 
             ? back()->banner('Friend request sent successfully')    
-            : back()->banner('Already sent a friend request');
+            : back()->dangerBanner('Failed to sent friend request');
     }
 
     /**
@@ -69,7 +72,7 @@ class FriendController extends Controller
     {
         return auth()->user()->acceptFriend($user->id) 
             ? back()->banner('Friend request accepted successfully') 
-            : back()->banner('Friend request accepted failed'); 
+            : back()->dangerBanner('Failed to accept the friend request'); 
     }
 
     /**
@@ -79,6 +82,12 @@ class FriendController extends Controller
     {
         return auth()->user()->deleteFriend($user->id) 
             ? back()->banner('Successfully unfriended the user') 
-            : back()->banner('Failed to unfriended the user'); 
+            : back()->dangerBanner('Failed to unfriend the user'); 
+    }
+
+    public function deny(User $user) {
+        return auth()->user()->denyFriend($user->id)
+            ? back()->banner('Friend request denied successfully')
+            : back()->dangerBanner('Friend request deny failed');
     }
 }

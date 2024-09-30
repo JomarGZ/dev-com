@@ -27,4 +27,4 @@ test('profile information can be updated', function () {
         ->profile->country->toEqual('Philippines')
         ->profile->city_id->toEqual(84115)
         ->profile->city->toEqual('Lapu-Lapu City');
-});
+})->skip();

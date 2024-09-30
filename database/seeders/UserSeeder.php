@@ -42,6 +42,5 @@ class UserSeeder extends Seeder
                 'email' => 'jomar@example.com',
             ]);
         
-        Friend::factory(20)->create();
     }
 }

@@ -5,10 +5,13 @@ use App\Models\Like;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
-
+beforeEach(function () {
+    session()->flush();
+});
 it('require authentication', function() {
     post(route('likes.store', ['post', 1]))
         ->assertRedirect(route('login'));

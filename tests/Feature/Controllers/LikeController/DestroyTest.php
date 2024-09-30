@@ -5,11 +5,15 @@ use App\Models\Like;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseEmpty;
 use function Pest\Laravel\delete;
 
+beforeEach(function () {
+    session()->flush();
+});
 it('require authentication', function() {
     delete(route('likes.destroy', ['post', 1]))
         ->assertRedirect(route('login'));

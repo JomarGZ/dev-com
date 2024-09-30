@@ -3,10 +3,16 @@
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Support\Facades\Config;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
 
+beforeEach(function () {
+    session()->flush();
+    $this->requester = User::factory()->create();
+    $this->userRequested = User::factory()->create();
+});
 it('require authentication', function() {
     post(route('posts.comments.store', Post::factory()->create()))
         ->assertRedirect(route('login'));

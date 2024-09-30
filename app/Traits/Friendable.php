@@ -5,7 +5,7 @@ namespace App\Traits;
 use App\Models\Friend;
 use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 trait Friendable
 {
@@ -26,8 +26,8 @@ trait Friendable
         }
 
         $friendShip = Friend::create([
-            'requester' => $this->id,
-            'user_requested' => $userRequestedId
+            'requester_id' => $this->id,
+            'user_requested_id' => $userRequestedId
         ]);
 
         return $friendShip ? 1 : 0;
@@ -35,15 +35,15 @@ trait Friendable
 
     public function acceptFriend(int $requesterId)
     {
+        
         if (empty($requesterId) || $requesterId <= 0) {
             return 0;
         }
         if (!$this->hasPendingFriendRequestFrom($requesterId)) {
             return 0;
         }
-      
-        $friendShip = Friend::where('requester', $requesterId)
-            ->where('user_requested', $this->id)
+        $friendShip = Friend::where('requester_id', $requesterId)
+            ->where('user_requested_id', $this->id)
             ->first();
         if ($friendShip) {
             $friendShip->update([
@@ -64,8 +64,8 @@ trait Friendable
             return 0;
         }
       
-        $friendship = Friend::where('requester', $requesterId)
-            ->where('user_requested', $this->id)
+        $friendship = Friend::where('requester_id', $requesterId)
+            ->where('user_requested_id', $this->id)
             ->first();
         if ($friendship) {
             $friendship->delete();
@@ -85,50 +85,39 @@ trait Friendable
         }
 
         try {
-            $friendship1 = Friend::where('requester', $friendId)
-            ->where('user_requested', $this->id)
+            $friendship1 = Friend::where('requester_id', $friendId)
+            ->where('user_requested_id', $this->id)
             ->first();
             
             if ($friendship1) {
                 $friendship1->delete();
             }
 
-            $friendship2 = Friend::where('requester', $this->id)
-                ->where('user_requested', $friendId)
+            $friendship2 = Friend::where('requester_id', $this->id)
+                ->where('user_requested_id', $friendId)
                 ->first();
 
             if ($friendship2) {
                 $friendship2->delete();
             }
             return 1;
-        }catch(Exception $e) {
-            info('Something went wrong... ERROR info:' . $e->getMessage());
-            return 0;
+        }catch(\Illuminate\Database\QueryException $e) {
+            Log::error('Database error: ' . $e->getMessage());
+            throw new Exception('Something went wrong while deleting the friend request.');
         }
        
     }
     
-    public function friends()
+    public function getFriends()
     {
-        return Friend::select('id', 'requester', 'user_requested', 'status')
-            ->where('status', Friend::ACCEPTED)
-            ->where(function($query) {
-                $query->where('requester', $this->id)
-                    ->orWhere('user_requested', $this->id);
-            })
-            ->get()
-            ->map(function($friendship) {
-                return $friendship->requester !== $this->id ? $friendship->requester : $friendship->user_requested;
-            })
-            ->map(function ($friendsId) {
-                return User::find($friendsId);
-            })
-            ->filter();
+        return $this->friends->filter(function ($friend) {
+            return $friend->id !== $this->id && $friend->pivot->status === Friend::ACCEPTED;
+        }); 
     }
 
     public function friendsIds()
     {
-        return collect($this->friends())->pluck('id')->toArray();
+        return collect($this->getfriends())->pluck('id')->toArray();
     }
 
     public function isFriendWith(int $id)
@@ -139,10 +128,10 @@ trait Friendable
     public function pendingFriendRequests()
     {
         $requesters = Friend::where('status', Friend::PENDING)
-            ->where('user_requested', $this->id)
+            ->where('user_requested_id', $this->id)
             ->get()
             ->map(function ($friendship){
-                return $friendship ? $friendship->requester : null;
+                return $friendship ? $friendship->requester_id : null;
             })
             ->map(function ($requesterId) {
                     return User::find($requesterId);
@@ -157,13 +146,14 @@ trait Friendable
         $users = array();
 
         $friendships = Friend::where('status', Friend::PENDING)
-            ->where('requester', $this->id)
+            ->where('requester_id', $this->id)
             ->get();
          if ($friendships->isNotEmpty()) {
             foreach($friendships as $friendship):
-                array_push($users, User::find($friendship->user_requested));
+                array_push($users, User::find($friendship->user_requested_id));
             endforeach;
-         }   
+         }
+
          return $users;
     }
 
@@ -185,6 +175,26 @@ trait Friendable
     public function hasPendingFriendRequestTo(int $id)
     {
         return in_array($id, $this->pendingFriendRequestSentIds()) ? 1 : 0;
+    }
+
+    public function friendsExisted(int $id) 
+    {
+        if (!$id || $id <= 0) {
+            return collect([]);
+        }
+        return Friend::select('id', 'requester_id', 'user_requested_id', 'status')
+            ->where(function($query) use ($id)  {
+                $query->where(function($query) use ($id)  {
+                    $query->where('requester_id', $this->id)
+                        ->where('user_requested_id',$id);
+                })
+                ->orWhere(function($query) use ($id)  {
+                    $query->where('requester_id', $id)
+                        ->where('user_requested_id',$this->id);
+                });
+            })
+            ->first();
+      
     }
 
 }

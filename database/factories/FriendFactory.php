@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Friend;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Friend>
@@ -18,16 +19,18 @@ class FriendFactory extends Factory
      */
     public function definition(): array
     {
-        $users = User::take(10)->get();    
+       $users = Cache::rememberForever('10_users_data', function () {
+            return User::take(10)->get();    
+        });
 
-        $requester = $users->random(1)->first();
-        $userRequested = $users->filter(function($user) use ($requester) {
-            return $user->id != $requester->id;
-        })->take(1)->first();
-
+        $requester = $users->random();
+        $userRequested = $users->shuffle()->filter(function($user) use ($requester) {
+            return !$user->friendsExisted($requester->id) && $user->id !== $requester->id;
+        })->first();
+        
         return [
-            'requester' => $requester->id,
-            'user_requested' => $userRequested->id,
+            'requester_id' => $requester->id,
+            'user_requested_id' => $userRequested->id,
             'status' => array_rand([Friend::PENDING, Friend::ACCEPTED], 1)
         ];
     }

@@ -7,7 +7,9 @@ use App\Models\User;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
 
+
 beforeEach(function () {
+    session()->flush();
     $this->validData = fn() => [
         'title' => 'hello world',
         'topic_id' => Topic::factory()->create()->getKey(),
