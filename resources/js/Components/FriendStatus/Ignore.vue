@@ -9,9 +9,10 @@ const props = defineProps(['user']);
 const form = useForm({});
 
 const denyFriendRequest = () => {
-    form.delete(route('friends.deny', {user: user}), {
+    form.delete(route('friends.deny', {user: props.user}), {
         preserveScroll: true,
         onSuccess: () => {}
+       
     });
 }
 </script>

@@ -128,7 +128,7 @@ const search = () => {
                                             Manage Account
                                         </div>
 
-                                        <DropdownLink :href="$page.props.auth.user.profile.links.show">
+                                        <DropdownLink :href="$page.props.auth.user.links.show">
                                             Profile
                                         </DropdownLink>
 

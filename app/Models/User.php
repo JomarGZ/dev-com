@@ -64,20 +64,28 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+
     public function profile(): HasOne
     {
         return $this->hasOne(Profile::class);
     }
 
-    public function friends()
+    public function friendsRequested()
     {
         return $this->belongsToMany(User::class, 'friends', 'requester_id', 'user_requested_id')
-            ->withPivot('status')
-            ->orWhere(function($query){
-                $query->where('user_requested_id', $this->id);
-            });
+            ->withPivot('status');
     }
 
+    public function friendsReceived()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_requested_id', 'requester_id')
+            ->withPivot('status');
+    }
+
+    public function friends()
+    {
+        return $this->friendsRequested->merge($this->friendsReceived);
+    }
     /**
      * Get all of the posts for the User
      *

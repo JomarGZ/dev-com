@@ -24,7 +24,8 @@ it('can accept a friend request', function () {
 
     Friend::factory()->create([
         'requester_id' => $this->requester->id,
-        'user_requested_id' => $this->userRequested->id
+        'user_requested_id' => $this->userRequested->id,
+        'status' => Friend::PENDING
     ]);
     actingAs($this->userRequested)
         ->put(route('friends.update', $this->requester))

@@ -5,7 +5,9 @@ namespace App\Traits;
 use App\Models\Friend;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 
 trait Friendable
 {
@@ -24,11 +26,14 @@ trait Friendable
         if ($this->hasPendingFriendRequestTo($userRequestedId)) {
             return 0;
         }
-
-        $friendShip = Friend::create([
-            'requester_id' => $this->id,
-            'user_requested_id' => $userRequestedId
-        ]);
+        try { 
+            $friendShip = Friend::create([
+                'requester_id' => $this->id,
+                'user_requested_id' => $userRequestedId
+            ]);
+        }catch(QueryException $e){
+            throw new Exception('Add friend Error: ' . $e->getMessage(), 500);
+        }
 
         return $friendShip ? 1 : 0;
     }
@@ -42,15 +47,20 @@ trait Friendable
         if (!$this->hasPendingFriendRequestFrom($requesterId)) {
             return 0;
         }
-        $friendShip = Friend::where('requester_id', $requesterId)
+        try {
+            $friendShip = Friend::where('requester_id', $requesterId)
             ->where('user_requested_id', $this->id)
             ->first();
-        if ($friendShip) {
-            $friendShip->update([
-                'status' => Friend::ACCEPTED
-            ]);
-            return 1;
+            if ($friendShip) {
+                $friendShip->update([
+                    'status' => Friend::ACCEPTED
+                ]);
+                return 1;
+            }
+        }catch (Exception $e) {
+            throw new Exception('Accept friend request ERROR: ' .  $e->getMessage(), 500);
         }
+       
 
         return 0;
     }
@@ -63,14 +73,19 @@ trait Friendable
         if (!$this->hasPendingFriendRequestFrom($requesterId)) {
             return 0;
         }
-      
-        $friendship = Friend::where('requester_id', $requesterId)
+        try {
+            $friendship = Friend::where('requester_id', $requesterId)
             ->where('user_requested_id', $this->id)
             ->first();
-        if ($friendship) {
-            $friendship->delete();
-            return 1;
+            if ($friendship) {
+                $friendship->delete();
+                return 1;
+            }
+        } catch(Exception $e) {
+    throw new Exception('Something went wrong while deleting the friend request: ' . $e->getMessage(), 500);
+            
         }
+     
 
         return 0;
     }
@@ -85,34 +100,29 @@ trait Friendable
         }
 
         try {
-            $friendship1 = Friend::where('requester_id', $friendId)
-            ->where('user_requested_id', $this->id)
-            ->first();
-            
-            if ($friendship1) {
-                $friendship1->delete();
+            if ($this->friendsExisted($friendId)->delete()) {
+                return 1;
             }
-
-            $friendship2 = Friend::where('requester_id', $this->id)
-                ->where('user_requested_id', $friendId)
-                ->first();
-
-            if ($friendship2) {
-                $friendship2->delete();
-            }
-            return 1;
-        }catch(\Illuminate\Database\QueryException $e) {
-            Log::error('Database error: ' . $e->getMessage());
-            throw new Exception('Something went wrong while deleting the friend request.');
+            return 0;
+        } catch (\Illuminate\Database\QueryException $e) {
+            throw new Exception('Something went wrong while deleting the friend request: ' . $e->getMessage(), 500);
         }
-       
     }
-    
-    public function getFriends()
+
+
+    public function getFriends(int $status = Friend::ACCEPTED)
     {
-        return $this->friends->filter(function ($friend) {
-            return $friend->id !== $this->id && $friend->pivot->status === Friend::ACCEPTED;
-        }); 
+        if (!in_array($status, [Friend::PENDING, Friend::ACCEPTED])) {
+            throw new InvalidArgumentException("Status must be either " .  Friend::PENDING ." or ". Friend::ACCEPTED);
+        }
+        return $this->friendsRequested()
+            ->wherePivot('status', $status)
+            ->get()
+            ->merge(
+                $this->friendsReceived()
+                ->wherePivot('status', $status)
+                ->get()
+            );
     }
 
     public function friendsIds()
@@ -122,7 +132,7 @@ trait Friendable
 
     public function isFriendWith(int $id)
     {
-        return in_array($id, haystack: $this->friendsIds()) ? 1 : 0;
+        return in_array($id, haystack:$this->friendsIds()) ? 1 : 0;
     }
 
     public function pendingFriendRequests()

@@ -49,18 +49,17 @@ class ProfileController extends Controller
      */
     public function show(Request $request, User $user)
     {
-       if (! Str::endsWith($user->showRoute(), $request->path())) {
-            return redirect($user->showRoute($request->query()), 301);
-       }
-        $user->load('profile');
-
+        if (! Str::endsWith($user->showRoute(), $request->path())) {
+                return redirect($user->showRoute($request->query()), 301);
+        }
+        $user->load(['profile:country,city,headline']);
+        $authUser = auth()->user();
         return inertia('Profile/Show', [
             'user' => UserResource::make($user),
-            'title' => Str::slug($user->name),
             'status' => [
-                'isFriendWith' => auth()->user()->isFriendWith($user->id),
-                'friendRequestSentTo' => auth()->user()->hasPendingFriendRequestTo($user->id),
-                'friendRequestReceivedFrom' => auth()->user()->hasPendingFriendRequestFrom($user->id),
+                'isFriendWith' => $authUser->isFriendWith($user->id),
+                'friendRequestSentTo' => $authUser->hasPendingFriendRequestTo($user->id),
+                'friendRequestReceivedFrom' => $authUser->hasPendingFriendRequestFrom($user->id),
             ]
         ]);
     }

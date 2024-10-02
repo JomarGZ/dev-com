@@ -85,7 +85,8 @@ class FriendController extends Controller
             : back()->dangerBanner('Failed to unfriend the user'); 
     }
 
-    public function deny(User $user) {
+    public function deny(User $user) 
+    {
         return auth()->user()->denyFriend($user->id)
             ? back()->banner('Friend request denied successfully')
             : back()->dangerBanner('Friend request deny failed');

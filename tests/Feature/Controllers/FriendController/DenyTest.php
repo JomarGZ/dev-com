@@ -20,10 +20,10 @@ it('require authentication', function () {
 });
 
 it('can deny a friend request', function () {
-    session()->flush();
     Friend::factory()->create([
         'requester_id' => $this->requester->id,
         'user_requested_id' => $this->userRequested->id,
+        'status' => Friend::PENDING
     ]);
 
     actingAs($this->userRequested)
@@ -31,6 +31,7 @@ it('can deny a friend request', function () {
         ->assertStatus(302)
         ->assertSessionHas('flash.banner', 'Friend request denied successfully')
         ->assertSessionHas('flash.bannerStyle', 'success');
+
 
     $this->assertDatabaseMissing('friends', [
         'requester_id' => $this->requester->id,
