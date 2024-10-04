@@ -62,7 +62,6 @@ import { useConfirm } from "@/Utilities/Composables/useConfirm";
 import MarkdownEditor from "@/Components/MarkdownEditor.vue";
 import PageHeading from "@/Components/PageHeading.vue";
 import Pill from "@/Components/Pill.vue";
-import {HandThumbUpIcon, HandThumbDownIcon} from '@heroicons/vue/24/solid';
 
 const props = defineProps(['post', 'comments']);
 const formattedDate = computed(() => relativeDate(props.post.created_at));

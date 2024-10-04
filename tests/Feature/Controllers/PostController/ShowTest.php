@@ -7,6 +7,11 @@ use App\Models\Like;
 use App\Models\Post;
 
 use function Pest\Laravel\get;
+use Illuminate\Support\Facades\Config;
+
+beforeEach(function () {
+    session()->flush();
+});
 
 it('can show a post', function() {
     $post = Post::factory()->create();

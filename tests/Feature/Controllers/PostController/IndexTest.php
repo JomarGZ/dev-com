@@ -7,8 +7,9 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Topic;
 use function Pest\Laravel\get;
-
-
+beforeEach(function () {
+    session()->flush();
+});
 it('should return the correct component', function(){
 
     get(route('posts.index'))

@@ -23,9 +23,9 @@ class ProfileController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+      
     }
 
     /**
@@ -49,13 +49,18 @@ class ProfileController extends Controller
      */
     public function show(Request $request, User $user)
     {
-       if (! Str::endsWith($user->showRoute(), $request->path())) {
-            return redirect($user->showRoute($request->query()), 301);
-       }
-        $user->load('profile');
+        if (! Str::endsWith($user->showRoute(), $request->path())) {
+                return redirect($user->showRoute($request->query()), 301);
+        }
+        $user->load(['profile:country,city,headline']);
+        $authUser = auth()->user();
         return inertia('Profile/Show', [
             'user' => UserResource::make($user),
-            'title' => Str::slug($user->name)
+            'status' => [
+                'isFriendWith' => $authUser->isFriendWith($user->id),
+                'friendRequestSentTo' => $authUser->hasPendingFriendRequestTo($user->id),
+                'friendRequestReceivedFrom' => $authUser->hasPendingFriendRequestFrom($user->id),
+            ]
         ]);
     }
 
@@ -134,13 +139,5 @@ class ProfileController extends Controller
         return tap(new Agent(), fn ($agent) => $agent->setUserAgent($session->user_agent));
     }
 
-    public function getStates ($country) 
-    {
-        return World::countries([
-            'fields' => 'states',
-            'filters' => [
-                'iso2' => 'FR'
-            ]
-        ]);
-    }
+  
 }

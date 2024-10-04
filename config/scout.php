@@ -136,9 +136,9 @@ return [
         'index-settings' => [
             'posts' => [
                 'filterableAttributes' => ['topic_id']
-            ]
+            ],
             // 'users' => [
-            //     'filterableAttributes'=> ['id', 'name', 'email'],
+            //     'filterableAttributes'=> ['id','name', 'email'],
             // ],
         ],
     ],

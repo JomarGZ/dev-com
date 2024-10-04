@@ -24,92 +24,14 @@
                             <p class="text-blue-600 mt-1">316 connections</p>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button class="bg-blue-600 text-white px-4 py-1 rounded-full">Open to</button>
-                            <button class="border border-blue-600 text-blue-600 px-4 py-1 rounded-full">Add profile section</button>
-                            <Link v-if="props.user.can.edit" :href="route('profile.edit')" class="border border-gray-300 text-gray-600 px-4 py-1 rounded-full">Edit</Link>
+                           <Status :user="props.user" :isFriendWith="props.status.isFriendWith" :friendRequestSentTo="props.status.friendRequestSentTo" :friendRequestReceivedFrom="props.status.friendRequestReceivedFrom"/>
+                            <!-- <button class="border border-blue-600 text-blue-600 px-4 py-1 rounded-full">Add profile section</button> -->
+                            <Link v-if="props.user.can.edit" :href="route('profiles.edit')" class="border border-gray-300 text-gray-600 px-4 py-1 rounded-full">Edit</Link>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow mt-4 p-4">
-                <h2 class="font-bold text-lg mb-2">Suggested for you</h2>
-                <p class="text-gray-600 text-sm mb-4"><i class="fas fa-eye"></i> Private to you</p>
-                <div class="flex items-center">
-                    <div class="flex-grow">
-                        <p class="font-semibold">Intermediate</p>
-                        <div class="bg-gray-200 h-2 rounded-full mt-1">
-                            <div class="bg-blue-600 h-2 rounded-full" style="width: 85%;"></div>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 ml-4">6/7</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow mt-4 p-4">
-                <h2 class="font-bold text-lg mb-2">Suggested for you</h2>
-                <p class="text-gray-600 text-sm mb-4"><i class="fas fa-eye"></i> Private to you</p>
-                <div class="flex items-center">
-                    <div class="flex-grow">
-                        <p class="font-semibold">Intermediate</p>
-                        <div class="bg-gray-200 h-2 rounded-full mt-1">
-                            <div class="bg-blue-600 h-2 rounded-full" style="width: 85%;"></div>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 ml-4">6/7</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow mt-4 p-4">
-                <h2 class="font-bold text-lg mb-2">Suggested for you</h2>
-                <p class="text-gray-600 text-sm mb-4"><i class="fas fa-eye"></i> Private to you</p>
-                <div class="flex items-center">
-                    <div class="flex-grow">
-                        <p class="font-semibold">Intermediate</p>
-                        <div class="bg-gray-200 h-2 rounded-full mt-1">
-                            <div class="bg-blue-600 h-2 rounded-full" style="width: 85%;"></div>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 ml-4">6/7</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow mt-4 p-4">
-                <h2 class="font-bold text-lg mb-2">Suggested for you</h2>
-                <p class="text-gray-600 text-sm mb-4"><i class="fas fa-eye"></i> Private to you</p>
-                <div class="flex items-center">
-                    <div class="flex-grow">
-                        <p class="font-semibold">Intermediate</p>
-                        <div class="bg-gray-200 h-2 rounded-full mt-1">
-                            <div class="bg-blue-600 h-2 rounded-full" style="width: 85%;"></div>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 ml-4">6/7</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow mt-4 p-4">
-                <h2 class="font-bold text-lg mb-2">Suggested for you</h2>
-                <p class="text-gray-600 text-sm mb-4"><i class="fas fa-eye"></i> Private to you</p>
-                <div class="flex items-center">
-                    <div class="flex-grow">
-                        <p class="font-semibold">Intermediate</p>
-                        <div class="bg-gray-200 h-2 rounded-full mt-1">
-                            <div class="bg-blue-600 h-2 rounded-full" style="width: 85%;"></div>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 ml-4">6/7</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow mt-4 p-4">
-                <h2 class="font-bold text-lg mb-2">Suggested for you</h2>
-                <p class="text-gray-600 text-sm mb-4"><i class="fas fa-eye"></i> Private to you</p>
-                <div class="flex items-center">
-                    <div class="flex-grow">
-                        <p class="font-semibold">Intermediate</p>
-                        <div class="bg-gray-200 h-2 rounded-full mt-1">
-                            <div class="bg-blue-600 h-2 rounded-full" style="width: 85%;"></div>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 ml-4">6/7</p>
-                </div>
-            </div>
             <div class="bg-white rounded-lg shadow mt-4 p-4">
                 <h2 class="font-bold text-lg mb-2">Suggested for you</h2>
                 <p class="text-gray-600 text-sm mb-4"><i class="fas fa-eye"></i> Private to you</p>
@@ -152,11 +74,13 @@
    </AppLayout>
 </template>
 <script setup>
+import Status from '@/Components/FriendStatus/Status.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { Link } from '@inertiajs/vue3';
 import slugify from 'slugify';
 import { computed } from 'vue';
-const props = defineProps(['user']);
+const props = defineProps(['user', 'status']);
 
 const slugifiedName = computed(() => slugify(props.user.name));
+
+
 </script>

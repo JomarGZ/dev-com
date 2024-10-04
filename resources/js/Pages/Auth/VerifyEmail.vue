@@ -42,7 +42,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
 
                 <div>
                     <Link
-                        :href="route('profile.show',  {id: $page.props.auth.user.id})"
+                        :href="route('profiles.show',  {id: $page.props.auth.user.id})"
                         class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                         Edit Profile</Link>

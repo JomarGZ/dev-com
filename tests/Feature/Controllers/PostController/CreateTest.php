@@ -6,7 +6,9 @@ use App\Models\User;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
-
+beforeEach(function () {
+    session()->flush();
+});
 it('requires authentication', function () {
     get(route('posts.create'))->assertRedirect(route('login'));
 });

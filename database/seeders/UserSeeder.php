@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Comment;
+use App\Models\Friend;
 use App\Models\Like;
 use App\Models\Post;
 use App\Models\Profile;
@@ -40,5 +41,6 @@ class UserSeeder extends Seeder
                 'name' => 'Jomar Godinez', 
                 'email' => 'jomar@example.com',
             ]);
+        
     }
 }

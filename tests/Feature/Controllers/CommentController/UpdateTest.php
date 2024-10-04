@@ -2,10 +2,16 @@
 
 use App\Models\Comment;
 use App\Models\User;
+use Illuminate\Support\Facades\Config;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\put;
 
+beforeEach(function () {
+    session()->flush();
+    $this->requester = User::factory()->create();
+    $this->userRequested = User::factory()->create();
+});
 it('requires authentication', function () {
     put(route('comments.update', Comment::factory()->create()))
         ->assertRedirect(route('login'));
