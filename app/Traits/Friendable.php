@@ -14,7 +14,7 @@ trait Friendable
     public function addFriend(int $userRequestedId)
     {
         if ($this->id === $userRequestedId || $userRequestedId <= 0) {
-            return 0;
+            throw new Exception("Argument should not be equal to authenticated user id and positive integer and must not equal to zero. {$userRequestedId} provided");
         }
 
         if ($this->isFriendWith($userRequestedId)) {
@@ -42,7 +42,7 @@ trait Friendable
     {
         
         if (empty($requesterId) || $requesterId <= 0) {
-            return 0;
+            throw new Exception("It should not be empty and only positive integer and must not equal to zero. {$requesterId} provided");
         }
         if (!$this->hasPendingFriendRequestFrom($requesterId)) {
             return 0;
@@ -82,8 +82,7 @@ trait Friendable
                 return 1;
             }
         } catch(Exception $e) {
-    throw new Exception('Something went wrong while deleting the friend request: ' . $e->getMessage(), 500);
-            
+            throw new Exception('Something went wrong while deleting the friend request: ' . $e->getMessage(), 500);
         }
      
 
@@ -93,7 +92,10 @@ trait Friendable
     public function deleteFriend(int $friendId)
     {
         if (empty($friendId) || $friendId <= 0 || $this->id === $friendId) {
-            return 0;
+            throw new Exception(
+                "It should not be empty and only positive integer and must not equal 
+                        to zero and not equal to authenticated use id. {$friendId} provided"
+            );
         }
         if (!$this->isFriendWith($friendId)) {
             return 0;
@@ -137,7 +139,7 @@ trait Friendable
 
     public function pendingFriendRequests()
     {
-        $requesters = Friend::where('status', Friend::PENDING)
+        return Friend::where('status', Friend::PENDING)
             ->where('user_requested_id', $this->id)
             ->get()
             ->map(function ($friendship){
@@ -147,8 +149,6 @@ trait Friendable
                     return User::find($requesterId);
             })
             ->filter();
-       
-        return $requesters;
     }
 
     public function pendingFriendRequestSent()
@@ -163,7 +163,6 @@ trait Friendable
                 array_push($users, User::find($friendship->user_requested_id));
             endforeach;
          }
-
          return $users;
     }
 

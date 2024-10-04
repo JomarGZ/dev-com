@@ -32,14 +32,6 @@ class FriendController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(User $user)
@@ -47,22 +39,6 @@ class FriendController extends Controller
         return auth()->user()->addFriend($user->id) 
             ? back()->banner('Friend request sent successfully')    
             : back()->dangerBanner('Failed to sent friend request');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
