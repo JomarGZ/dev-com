@@ -20,25 +20,35 @@
      </template>
  </template>
  <script setup>
- import { useForm } from '@inertiajs/vue3';
- import Accept from './Accept.vue';
- import Ignore from './Ignore.vue';
- 
- const props = defineProps(['user', 'friendRequestReceivedFrom', 'isFriendWith', 'friendRequestSentTo']);
- const addFriendform = useForm({});
- const unFriendform = useForm({});
- 
- const addFriend = () => {
+import { useForm, usePage } from '@inertiajs/vue3';
+import Accept from './Accept.vue';
+import Ignore from './Ignore.vue';
+const props = defineProps(['user', 'friendRequestReceivedFrom', 'isFriendWith', 'friendRequestSentTo']);
+const addFriendform = useForm({});
+const unFriendform = useForm({});
+
+
+const addFriend = () => {
     addFriendform.post(route('friends.store', {user: props.user}), {
          preserveScroll: true,
-         onSuccess: () => {}
+         onSuccess: () => {
+            Toast.fire({
+                icon: "success",
+                title: usePage().props.flash?.message ?? ''
+            });
+         }
     });
- }
- const unfriend = () => {
+}
+const unfriend = () => {
     unFriendform.delete(route('friends.destroy', {user: props.user}), {
          preserveScroll: true,
-         onSuccess: () => {}
+         onSuccess: () => {
+            Toast.fire({
+                icon: "success",
+                title: usePage().props.flash?.message ?? ''
+            });
+         },
     });
- }
+}
 
  </script>

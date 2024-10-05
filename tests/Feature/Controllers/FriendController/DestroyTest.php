@@ -32,8 +32,7 @@ it('can unfriend a friend user', function () {
     actingAs($this->requester)
         ->delete(route('friends.destroy', $this->userRequested))
         ->assertStatus(302)
-        ->assertSessionHas('flash.banner', 'Successfully unfriended the user')
-        ->assertSessionHas('flash.bannerStyle', 'success');
+        ->assertSessionHas('message', 'Successfully unfriended the user');
     
     $this->assertDatabaseMissing('friends', [
         'requester_id' => $this->requester->id,
@@ -47,9 +46,7 @@ it('should not unfriend the user you are not friends', function () {
 
     actingAs($this->requester)
         ->delete(route('friends.destroy', $this->userRequested))
-        ->assertStatus(302)
-        ->assertSessionHas('flash.banner', 'Failed to unfriend the user')
-        ->assertSessionHas('flash.bannerStyle', 'danger');
+        ->assertStatus(500);
 
 });
 it('should not unfriend the user that is still in pending request', function () {
@@ -68,10 +65,8 @@ it('should not unfriend the user that is still in pending request', function () 
 
     actingAs($this->requester)
         ->delete(route('friends.destroy', $this->userRequested))
-        ->assertStatus(302)
-        ->assertSessionHas('flash.banner', 'Failed to unfriend the user')
-        ->assertSessionHas('flash.bannerStyle', 'danger');
-        
+        ->assertStatus(500);
+       
     $this->assertDatabaseHas('friends', [
         'requester_id' => $this->requester->id,
         'user_requested_id' => $this->userRequested->id,

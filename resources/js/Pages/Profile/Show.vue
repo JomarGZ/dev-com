@@ -77,10 +77,9 @@
 import Status from '@/Components/FriendStatus/Status.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import slugify from 'slugify';
-import { computed } from 'vue';
+import { computed} from 'vue';
 const props = defineProps(['user', 'status']);
 
 const slugifiedName = computed(() => slugify(props.user.name));
-
 
 </script>

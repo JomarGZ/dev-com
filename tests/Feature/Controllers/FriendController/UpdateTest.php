@@ -30,8 +30,7 @@ it('can accept a friend request', function () {
     actingAs($this->userRequested)
         ->put(route('friends.update', $this->requester))
         ->assertStatus(302)
-        ->assertSessionHas('flash.banner', 'Friend request accepted successfully')
-        ->assertSessionHas('flash.bannerStyle', 'success');
+        ->assertSessionHas('message', 'Friend request accepted successfully');
 
     $this->assertDatabaseMissing('friends', [
         'requester_id' => $this->requester->id,
@@ -59,9 +58,8 @@ it('should not accept a friend request if already friends', function () {
 
     actingAs($this->userRequested)
         ->put(route('friends.update', $this->requester))
-        ->assertStatus(302)
-        ->assertSessionHas('flash.banner', 'Failed to accept the friend request')
-        ->assertSessionHas('flash.bannerStyle', 'danger');
+        ->assertStatus(500);
+      
     
     $this->assertDatabaseHas('friends', [
         'requester_id' => $this->requester->id,
@@ -80,10 +78,8 @@ it('should not accept a friend request if no pending request', function () {
     
     actingAs($this->userRequested)
         ->put(route('friends.update', $this->requester))
-        ->assertStatus(302)
-        ->assertSessionHas('flash.banner', 'Failed to accept the friend request')
-        ->assertSessionHas('flash.bannerStyle', 'danger');
-
+        ->assertStatus(500);
+       
     $this->assertDatabaseMissing('friends', [
         'requester_id' => $this->requester->id,
         'user_requested_id' => $this->userRequested->id,

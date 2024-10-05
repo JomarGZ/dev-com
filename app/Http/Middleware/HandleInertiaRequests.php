@@ -48,6 +48,9 @@ class HandleInertiaRequests extends Middleware
             ],
             'permissions' => [
                 'create_posts' => $request->user()?->can('create', Post::class)
+            ],
+            'flash' => [
+                'message' => session('message')
             ]
         ]);
     }
