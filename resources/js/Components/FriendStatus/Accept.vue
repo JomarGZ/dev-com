@@ -4,15 +4,20 @@
     </form>
 </template>
 <script setup>
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 const props = defineProps(['user']);
 const form = useForm({});
 
 const acceptFriendRequest = () => {
-    console.log('triggered');
+
     form.put(route('friends.update', {user: props.user}), {
         preserveScroll: true,
-        onSuccess: () => {}
+        onSuccess: () => {
+            Toast.fire({
+                icon: "success",
+                title: usePage().props.flash?.message ?? ''
+            });
+        }
     });
 }
 </script>
