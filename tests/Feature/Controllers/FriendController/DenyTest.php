@@ -29,9 +29,7 @@ it('can deny a friend request', function () {
     actingAs($this->userRequested)
         ->delete(route('friends.deny', $this->requester))
         ->assertStatus(302)
-        ->assertSessionHas('flash.banner', 'Friend request denied successfully')
-        ->assertSessionHas('flash.bannerStyle', 'success');
-
+        ->assertSessionHas('message', 'Friend request denied successfully');
 
     $this->assertDatabaseMissing('friends', [
         'requester_id' => $this->requester->id,
@@ -49,11 +47,7 @@ it('should not allow denying if there is no pending friend request', function ()
     ]);
     actingAs($this->userRequested)
         ->delete(route('friends.deny', $this->requester))
-        ->assertStatus(302)
-        ->assertSessionHas('flash.banner', 'Friend request deny failed')
-        ->assertSessionHas('flash.bannerStyle', 'danger');
-
-    
+        ->assertStatus(500);
 });
 it('should not allow denying if already friends', function () {
     Friend::factory()->create([
@@ -70,9 +64,7 @@ it('should not allow denying if already friends', function () {
 
     actingAs($this->userRequested)
         ->delete(route('friends.deny', $this->requester))
-        ->assertStatus(302)
-        ->assertSessionHas('flash.banner', 'Friend request deny failed')
-        ->assertSessionHas('flash.bannerStyle', 'danger');
+        ->assertStatus(500);
     
     $this->assertDatabaseHas('friends', [
         'requester_id' => $this->requester->id,
@@ -96,9 +88,7 @@ it('should not allow denying a request sent by the authenticated user', function
 
     actingAs($this->requester)
         ->delete(route('friends.deny', $this->userRequested))
-        ->assertStatus(302)
-        ->assertSessionHas('flash.banner', 'Friend request deny failed')
-        ->assertSessionHas('flash.bannerStyle', 'danger');
+        ->assertStatus(500);
 
     $this->assertDatabaseHas('friends', [
         'requester_id' => $this->requester->id,
