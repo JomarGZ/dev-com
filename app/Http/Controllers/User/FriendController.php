@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Events\FriendRequestAccepted;
+use App\Events\FriendRequestIgnored;
+use App\Events\FriendRequestSent;
+use App\Events\Unfriended;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -37,6 +41,7 @@ class FriendController extends Controller
         if (!auth()->user()->addFriend($user->id)) {
             throw new \Exception('Failed to add friend');
         }
+        event(new FriendRequestSent(auth()->user(), $user));
         return back()->with('message', 'Friend request sent successfully');       
     }    
 
@@ -48,6 +53,7 @@ class FriendController extends Controller
         if (!auth()->user()->acceptFriend($user->id)) {
             throw new \Exception('Failed to accept friend request');
         }
+        event(new FriendRequestAccepted($user, auth()->user()));
         return back()->with('message', 'Friend request accepted successfully'); 
     }
 
@@ -67,6 +73,7 @@ class FriendController extends Controller
         if (!auth()->user()->denyFriend($user->id)) {
             throw new \Exception('Failed to deny a friend request');
         }
+        event(new FriendRequestIgnored($user, auth()->user()));
         return back()->with('message', 'Friend request denied successfully');
     }
 }
