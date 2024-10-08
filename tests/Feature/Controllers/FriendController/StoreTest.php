@@ -2,7 +2,9 @@
 
 use App\Models\Friend;
 use App\Models\User;
+use App\Notifications\FriendRequestSentNotification;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Notification;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
@@ -20,6 +22,7 @@ it('required authentication', function () {
 });
 
 it('can send friend request', function () {
+    Notification::fake();
     actingAs($this->requester)
         ->post(route('friends.store', $this->userRequested))
         ->assertStatus(302)
@@ -30,6 +33,11 @@ it('can send friend request', function () {
         'user_requested_id' => $this->userRequested->id,
         'status' => Friend::PENDING
     ]);
+
+    Notification::assertSentTo(
+        [$this->userRequested],
+        FriendRequestSentNotification::class 
+    );
 });
 
 it('should not send friend request to user that already friends', function () {

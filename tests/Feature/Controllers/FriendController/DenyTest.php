@@ -2,7 +2,9 @@
 
 use App\Models\Friend;
 use App\Models\User;
+use App\Notifications\FriendRequestIgnoredNotification;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Notification;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\delete;
@@ -20,6 +22,8 @@ it('require authentication', function () {
 });
 
 it('can deny a friend request', function () {
+
+    Notification::fake();
     Friend::factory()->create([
         'requester_id' => $this->requester->id,
         'user_requested_id' => $this->userRequested->id,
@@ -36,6 +40,11 @@ it('can deny a friend request', function () {
         'user_requested_id' => $this->userRequested->id,
         'status' => Friend::PENDING
     ]);
+
+    Notification::assertSentTo(
+        [$this->requester],
+        FriendRequestIgnoredNotification::class
+    );
 
 });
 it('should not allow denying if there is no pending friend request', function () {

@@ -5,15 +5,12 @@ namespace App\Providers;
 use App\Events\FriendRequestAccepted;
 use App\Events\FriendRequestIgnored;
 use App\Events\FriendRequestSent;
-use App\Events\Unfriended;
 use App\Listeners\FriendRequestAcceptedListener;
 use App\Listeners\FriendRequestIgnoredListener;
 use App\Listeners\FriendRequestSentListener;
-use App\Listeners\UnfriendedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -34,9 +31,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         FriendRequestAccepted::class => [
             FriendRequestAcceptedListener::class
-        ],
-        Unfriended::class => [
-            UnfriendedListener::class
         ]
     ];
 

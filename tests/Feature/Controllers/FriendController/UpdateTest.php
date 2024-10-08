@@ -2,7 +2,9 @@
 
 use App\Models\Friend;
 use App\Models\User;
+use App\Notifications\FriendRequestAcceptedNotification;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Notification;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\put;
@@ -20,7 +22,8 @@ it('require authentication', function () {
         ->assertRedirect(route('login'));
 });
 it('can accept a friend request', function () {
-    session()->flush();
+    
+    Notification::fake();
 
     Friend::factory()->create([
         'requester_id' => $this->requester->id,
@@ -43,6 +46,11 @@ it('can accept a friend request', function () {
         'user_requested_id' => $this->userRequested->id,
         'status' => Friend::ACCEPTED
     ]);
+
+    Notification::assertSentTo(
+        [$this->requester],
+        FriendRequestAcceptedNotification::class
+    );
 });
 it('should not accept a friend request if already friends', function () {
     Friend::factory()->create([
