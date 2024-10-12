@@ -10,18 +10,18 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import ConfirmationModalWrapper from '@/Components/ConfirmationModalWrapper.vue';
 import TextInput from '@/Components/TextInput.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-
+import Notification from '@/Components/DropDowns/Notification.vue';
 const props = defineProps({
         title: String,
-        userQuery: String
+        userQuery: String   
     });
-
+const page = usePage();
 const menu = [
     {
         name : "Home",
         url: route("home"),
         route: "home",
-        when: () => usePage().props.auth.user
+        when: () => page.props.auth.user
     },
     {
         name : "Posts",
@@ -32,13 +32,13 @@ const menu = [
         name : "Create a Post",
         url: route('posts.create'),
         route: 'posts.create',
-        when: () => usePage().props.permissions.create_posts
+        when: () => page.props.permissions.create_posts
     },
     {
         name : "Networks",
         url: route('friends.index'),
         route: 'friends.index',
-        when: () => usePage().props.permissions.create_posts
+        when: () => page.props.permissions.create_posts
     }
 ];
 const showingNavigationDropdown = ref(false);
@@ -56,7 +56,7 @@ const logout = () => {
 };
 
 const searchForm = useForm({
-    userQuery: usePage().props.userQuery
+    userQuery: page.props.userQuery
 })
 
 const search = () => {
@@ -98,7 +98,8 @@ const search = () => {
                                         :active="route().current(item.route)">
                                         {{ item.name }}
                                     </NavLink>
-                            </template>
+                                </template>
+                                <Notification/>
                             </div>
                         </div>
 
@@ -128,7 +129,7 @@ const search = () => {
                                             Manage Account
                                         </div>
 
-                                        <DropdownLink :href="$page.props.auth.user.links.show">
+                                        <DropdownLink :href="route('profiles.show', {user: $page.props.auth.user})">
                                             Profile
                                         </DropdownLink>
 

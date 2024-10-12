@@ -26,7 +26,7 @@ class FriendRequestSentNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -49,7 +49,11 @@ class FriendRequestSentNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'info' => [
+                'name' => $this->sender->name,
+                'message' => "{$this->sender->name} sent you a friend request",
+                'link' => '#'
+            ]
         ];
     }
 }
