@@ -17,9 +17,9 @@ class HomeController extends Controller
      */
     public function __invoke()
     {
-        $user = User::findOrFail(request()->user()->id);
-        $user->load('profile');
-
+        $user = auth()->user()->load(['profile' => function ($query) {
+            $query->select('headline', 'user_id');
+        }]);
         $posts = Post::latest()->latest('id')->paginate();
         $posts->load(['user', 'topic']);
         

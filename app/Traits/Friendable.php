@@ -139,31 +139,12 @@ trait Friendable
 
     public function pendingFriendRequests()
     {
-        return Friend::where('status', Friend::PENDING)
-            ->where('user_requested_id', $this->id)
-            ->get()
-            ->map(function ($friendship){
-                return $friendship ? $friendship->requester_id : null;
-            })
-            ->map(function ($requesterId) {
-                    return User::find($requesterId);
-            })
-            ->filter();
+        return $this->friendsReceived()->wherePivot('status', Friend::PENDING)->get();
     }
 
     public function pendingFriendRequestSent()
     {
-        $users = array();
-
-        $friendships = Friend::where('status', Friend::PENDING)
-            ->where('requester_id', $this->id)
-            ->get();
-         if ($friendships->isNotEmpty()) {
-            foreach($friendships as $friendship):
-                array_push($users, User::find($friendship->user_requested_id));
-            endforeach;
-         }
-         return $users;
+         return $this->friendsRequested()->wherePivot('status', Friend::PENDING)->get();
     }
 
     public function pendingFriendRequestIds()

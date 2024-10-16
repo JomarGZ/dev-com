@@ -18,7 +18,7 @@ class ProfileResource extends JsonResource
             'headline' => $this->headline,
             'about_me' => $this->about_me,
             'banner_photo_url' => $this->banner_photo_url,
-            'address' => "{$this->country}, {$this->city}",
+            'address' => $this->country && $this->city ? "{$this->country}, {$this->city}" : null,
             'phone' => $this->phone,
             'user' => UserResource::make($this->whenLoaded('user')),
         ];
