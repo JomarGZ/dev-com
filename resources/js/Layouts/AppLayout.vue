@@ -10,7 +10,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import ConfirmationModalWrapper from '@/Components/ConfirmationModalWrapper.vue';
 import TextInput from '@/Components/TextInput.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import Notification from '@/Components/DropDowns/Notification.vue';
+import Notification from '@/Components/Notification.vue';
 const props = defineProps({
         title: String,
         userQuery: String   
@@ -99,7 +99,10 @@ const search = () => {
                                         {{ item.name }}
                                     </NavLink>
                                 </template>
-                                <Notification/>
+                                <Notification 
+                                    :notifications="$page.props.auth.user.notifications" 
+                                    :read="$page.props.auth.user.read_notifications"
+                                    :unread="$page.props.auth.user.unread_notifications"/>
                             </div>
                         </div>
 

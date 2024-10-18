@@ -51,9 +51,10 @@ class FriendRequestIgnoredNotification extends Notification
     {
         return [
             'info' => [
-                'name' => $this->recipient->name,
-                'message' => "{$this->recipient->name} denied your friend request",
-                'link' => '#'
+                'profile_photo_url' => $this->recipient->profilePhotoUrl,
+                'name'              => $this->recipient->name,
+                'message'           => "Denied your friend request",
+                'link'              => $this->recipient->showRoute()
             ]
         ];
     }

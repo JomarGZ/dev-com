@@ -40,7 +40,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'auth' => function() {
                 $user = auth()->user();
-                $user->load(
+                $user?->load(
         [
                         'notifications',
                         'profile',

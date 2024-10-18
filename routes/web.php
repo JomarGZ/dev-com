@@ -6,6 +6,7 @@ use App\Http\Controllers\User\CommentController;
 use App\Http\Controllers\User\ConnectController;
 use App\Http\Controllers\User\FriendController;
 use App\Http\Controllers\User\LikeController;
+use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\PostController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\UserController;
@@ -62,7 +63,11 @@ Route::middleware([
     
     Route::get('cities', [LocationController::class, 'getCities'])->name('get.cities');
 
-
+    Route::prefix('notifications')->group(function () {
+        Route::put('/{id}', [NotificationController::class, 'update'])->name('notifications.update');
+        Route::patch('/{id}', [NotificationController::class, 'updateAll'])->name('notifications.updateAll');
+        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+    });
 });
 
 Route::get('posts/{topic?}', [PostController::class, 'index'])->name('posts.index');

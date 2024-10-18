@@ -50,9 +50,10 @@ class FriendRequestSentNotification extends Notification
     {
         return [
             'info' => [
-                'name' => $this->sender->name,
-                'message' => "{$this->sender->name} sent you a friend request",
-                'link' => '#'
+                'profile_photo_url' => $this->sender->profilePhotoUrl,
+                'name'              => $this->sender->name,
+                'message'           => "Sent you a friend request",
+                'link'              => $this->sender->showRoute()
             ]
         ];
     }

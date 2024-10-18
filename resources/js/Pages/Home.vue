@@ -6,7 +6,7 @@
                 <SectionWrapper>
                         <img src="https://picsum.photos/seed/picsum/200/100" class="w-full">
                         <div class="px-[25px] py-0">
-                            <img src="https://picsum.photos/90/90" class="w-[90px] h-[90px] rounded-full bg-white p-[4px] mt-[-45px]">
+                            <img :src="$page.props.auth.user.profile_photo_url" class="w-[90px] h-[90px] rounded-full bg-white p-[4px] mt-[-45px]">
                             <h1 class="text-[20px] font-semibold text-[#222]">{{ $page.props.auth.user.name }}</h1>
                             <h3 class="text-[14px] font-medium text-[#777]">{{ $page.props.auth.user.profile.headline }}</h3>
                             <ul class="list-none my-5">

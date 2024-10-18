@@ -51,9 +51,10 @@ class FriendRequestAcceptedNotification extends Notification
     {
         return [
             'info' => [
-                'name' => $this->recipient->name,
-                'message' => "{$this->recipient->name} accepted your friend request",
-                'link' => '#'
+                'profile_photo_url' => $this->recipient->profilePhotoUrl,
+                'name'              => $this->recipient->name,
+                'message'           => "Accepted your friend request",
+                'link'              => $this->recipient->showRoute()
             ]
         ];
     }

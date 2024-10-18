@@ -7,7 +7,6 @@
       </svg>
       <span v-if="unread.length > 0" class="bg-red-500 text-white text-xs rounded-full px-2 py-1 absolute top-2">{{ unread.length }}</span>
     </button>
-
     <!-- Dropdown -->
     <div v-if="isOpen" class="absolute right-0 top-12 mt-2 w-80 bg-white rounded-md shadow-lg overflow-hidden z-20">
       <div class="py-2">
@@ -18,14 +17,11 @@
           No new notifications    
         </div>
         <div v-else>
-          <Link v-for="notification in notifications" :key="notification.id"  href="#" class="flex items-center px-4 py-3 hover:bg-gray-200 cursor-pointer" :class="{'bg-gray-300' : notification.read_at == null}">
-            <img src="https://picsum.photos/55/55" class="h-8 w-8 rounded-full object-cover">
-            <div class="ml-3 overflow-hidden">
-              <p class="text-sm font-medium text-gray-900">{{ notification.name }}</p>
-              <p class="text-sm text-gray-500 truncate">{{ notification.message }}</p>
-              <span class="text-xs text-gray-400">{{ notification.date }}</span>
-            </div>
-          </Link>
+          <NotificationItem 
+            v-for="notification in notifications" 
+            :key="notification.id" 
+            :notification="notification" 
+           />
         </div>
         <a href="#" class="block bg-gray-50 text-sm font-medium text-indigo-600 text-center px-4 py-2 hover:text-indigo-500">
           View all notifications
@@ -36,52 +32,14 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue'
+import NotificationItem from './NotificationItem.vue';
+const props = defineProps(['notifications', 'unread', 'read']);
 
 const isOpen = ref(false);
-const notifications = ref([
-  {
-    id: 1,
-    name: 'John Doe',
-    message: 'Accepted your friend request',
-    date: '2 minutes ago',
-    read_at: null
-  },
-  {
-    id: 2,
-    name: 'Jason Mras',
-    message: 'Denied your friend request',
-    date: '1 hour ago',
-    read_at: '2024-10-12 03:59:44'
-  },
-  {
-    id: 3,
-    name: 'Jenny Santos',
-    message: 'Sent you a friend request',
-    date: '2 days ago',
-    read_at: null
-  },
-]);
-const unread = ref([
-  {
-    id: 1,
-    name: 'John Doe',
-    message: 'Accepted your friend request',
-    date: '2 minutes ago',
-    read_at: null
-  },
-  {
-    id: 3,
-    name: 'Jenny Santos',
-    message: 'Sent you a friend request',
-    date: '2 days ago',
-    read_at: null
-  },
-]);
+const notifications = ref(props.notifications);
+const unread = ref(props.unread);
+
 const toggleDropdown = () => isOpen.value = !isOpen.value;
 
-//display number of unread notifications if there is any.
-//filter the unread notification.
-//
 </script>
