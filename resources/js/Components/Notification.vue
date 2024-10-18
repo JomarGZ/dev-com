@@ -21,6 +21,9 @@
             v-for="notification in notifications" 
             :key="notification.id" 
             :notification="notification" 
+            :class="notification.read_at === null ? 'bg-gray-300' : ''"
+            @markOneAsRead="markOneAsRead"
+            @deleteNotification="handleDelete"
            />
         </div>
         <a href="#" class="block bg-gray-50 text-sm font-medium text-indigo-600 text-center px-4 py-2 hover:text-indigo-500">
@@ -34,6 +37,7 @@
 <script setup>
 import { ref } from 'vue'
 import NotificationItem from './NotificationItem.vue';
+import axios from 'axios';
 const props = defineProps(['notifications', 'unread', 'read']);
 
 const isOpen = ref(false);
@@ -42,4 +46,35 @@ const unread = ref(props.unread);
 
 const toggleDropdown = () => isOpen.value = !isOpen.value;
 
+const isNotificationUnread = (notificationId) => {
+  return unread.value.some(notification => notification.id === notificationId);
+}
+const isNotificationExist = (notificationId) => {
+  return notifications.value.some(notification => notification.id === notificationId);
+}
+
+const markOneAsRead = (notificationId) => {
+  if (!isNotificationUnread(notificationId)) {
+    return;
+  }
+  axios.put(route('notifications.update', notificationId))
+    .catch(error => {
+      console.error('Error marking notification as read', error);
+    })
+};
+
+const handleDelete = (notificationId) => {
+  if (!isNotificationExist(notificationId)) {
+    return;
+  }
+  if(confirm('Are you sure you want to delete it?')) {
+    axios.delete(route('notifications.destroy', notificationId))
+      .then(() => {
+        notifications.value = notifications.value.filter(notification => notification.id !== notificationId);
+      })
+      .catch(error => {
+        console.error('Error on deleting the notification', error);
+      });
+  } 
+}
 </script>
