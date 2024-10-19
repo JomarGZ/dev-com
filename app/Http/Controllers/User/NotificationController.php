@@ -13,9 +13,11 @@ class NotificationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $notification = auth()->user()->unreadNotifications()->findOrFail($id);
-        $notification->markAsRead();
-        return response()->json($notification);
+       return auth()
+        ->user()
+        ->unreadNotifications()
+        ->findOrFail($id)
+        ->markAsRead();
     }
 
     /**
@@ -23,7 +25,10 @@ class NotificationController extends Controller
      */
     public function destroy(string $id)
     {
-       $notification = auth()->user()->notifications()->find($id);
-       return $notification->delete();
+       return auth()
+        ->user()
+        ->notifications()
+        ->find($id)
+        ->delete();
     }
 }

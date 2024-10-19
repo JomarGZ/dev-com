@@ -46,12 +46,7 @@ const unread = ref(props.unread);
 
 const toggleDropdown = () => isOpen.value = !isOpen.value;
 
-const isNotificationUnread = (notificationId) => {
-  return unread.value.some(notification => notification.id === notificationId);
-}
-const isNotificationExist = (notificationId) => {
-  return notifications.value.some(notification => notification.id === notificationId);
-}
+
 
 const markOneAsRead = (notificationId) => {
   if (!isNotificationUnread(notificationId)) {
@@ -67,14 +62,37 @@ const handleDelete = (notificationId) => {
   if (!isNotificationExist(notificationId)) {
     return;
   }
-  if(confirm('Are you sure you want to delete it?')) {
-    axios.delete(route('notifications.destroy', notificationId))
-      .then(() => {
-        notifications.value = notifications.value.filter(notification => notification.id !== notificationId);
-      })
-      .catch(error => {
-        console.error('Error on deleting the notification', error);
-      });
-  } 
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      axios.delete(route('notifications.destroy', notificationId))
+        .then(() => {
+          notifications.value = notifications.value.filter(notification => notification.id !== notificationId);
+        
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your notification has been deleted.",
+            icon: "success"
+          });
+        })
+        .catch(error => {
+          console.error('Error on deleting the notification', error);
+        });
+    }
+  });
+}
+
+const isNotificationUnread = (notificationId) => {
+  return unread.value.some(notification => notification.id === notificationId);
+}
+const isNotificationExist = (notificationId) => {
+  return notifications.value.some(notification => notification.id === notificationId);
 }
 </script>
