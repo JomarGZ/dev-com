@@ -65,7 +65,6 @@ Route::middleware([
 
     Route::prefix('notifications')->group(function () {
         Route::put('/{id}', [NotificationController::class, 'update'])->name('notifications.update');
-        Route::patch('/{id}', [NotificationController::class, 'updateAll'])->name('notifications.updateAll');
         Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     });
 });
