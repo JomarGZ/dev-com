@@ -38,15 +38,20 @@
 import { ref } from 'vue'
 import NotificationItem from './NotificationItem.vue';
 import axios from 'axios';
+import { useFlash } from '@/composables/useFlash';
 const props = defineProps(['notifications', 'unread', 'read']);
 
 const isOpen = ref(false);
 const notifications = ref(props.notifications);
 const unread = ref(props.unread);
 
+const { confirmFlash } = useFlash();
+
 const toggleDropdown = () => isOpen.value = !isOpen.value;
 
-
+const deleteNotification = (notificationId) => {
+  return axios.delete(route('notifications.destroy', notificationId));
+};
 
 const markOneAsRead = (notificationId) => {
   if (!isNotificationUnread(notificationId)) {
@@ -62,30 +67,10 @@ const handleDelete = (notificationId) => {
   if (!isNotificationExist(notificationId)) {
     return;
   }
-  Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!"
-  }).then((result) => {
-    if (result.isConfirmed) {
-      axios.delete(route('notifications.destroy', notificationId))
-        .then(() => {
-          notifications.value = notifications.value.filter(notification => notification.id !== notificationId);
-        
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your notification has been deleted.",
-            icon: "success"
-          });
-        })
-        .catch(error => {
-          console.error('Error on deleting the notification', error);
-        });
-    }
+  confirmFlash({
+    deleteAction: deleteNotification,
+    entityId: notificationId,
+    entityList: notifications,
   });
 }
 
