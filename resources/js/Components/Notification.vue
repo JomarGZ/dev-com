@@ -16,7 +16,7 @@
         <div v-if="notifications.length == 0" class="px-4 py-2 text-sm text-gray-500">
           No new notifications    
         </div>
-        <div v-else>
+        <div v-else class="max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
           <NotificationItem 
             v-for="notification in notifications" 
             :key="notification.id" 

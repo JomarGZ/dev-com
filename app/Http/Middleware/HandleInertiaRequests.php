@@ -42,10 +42,25 @@ class HandleInertiaRequests extends Middleware
                 $user = auth()->user();
                 $user?->load(
         [
-                        'notifications',
+                        'notifications' => function ($query) { 
+                            $query
+                                ->select('id', 'notifiable_id', 'notifiable_type', 'data', 'created_at', 'read_at')
+                                ->latest()
+                                ->take(50); 
+                        },
                         'profile',
-                        'unreadNotifications',
-                        'readNotifications'
+                        'unreadNotifications' => function ($query) { 
+                            $query
+                                ->select('id', 'notifiable_id', 'notifiable_type', 'data', 'created_at', 'read_at')
+                                ->latest()
+                                ->take(50); 
+                        },
+                        'readNotifications' => function ($query) { 
+                            $query
+                                ->select('id', 'notifiable_id', 'notifiable_type', 'data', 'created_at', 'read_at')
+                                ->latest()
+                                ->take(50); 
+                        }
                     ]
                 );
                 return $user ? [
