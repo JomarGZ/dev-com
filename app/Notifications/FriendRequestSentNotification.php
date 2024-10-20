@@ -26,7 +26,7 @@ class FriendRequestSentNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -49,7 +49,12 @@ class FriendRequestSentNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'info' => [
+                'profile_photo_url' => $this->sender->profilePhotoUrl,
+                'name'              => $this->sender->name,
+                'message'           => "Sent you a friend request",
+                'link'              => $this->sender->showRoute()
+            ]
         ];
     }
 }

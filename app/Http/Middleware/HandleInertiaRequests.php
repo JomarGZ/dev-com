@@ -37,15 +37,36 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user = $request->user();
         return array_merge(parent::share($request), [
-            'auth' => [
-                'user' => $user ? array_merge($user->toArray(), [
-                    'links' => [
-                        'show' => $user->showRoute()
+            'auth' => function() {
+                $user = auth()->user();
+                $user?->load(
+        [
+                        'notifications' => function ($query) { 
+                            $query
+                                ->select('id', 'notifiable_id', 'notifiable_type', 'data', 'created_at', 'read_at')
+                                ->latest()
+                                ->take(50); 
+                        },
+                        'profile',
+                        'unreadNotifications' => function ($query) { 
+                            $query
+                                ->select('id', 'notifiable_id', 'notifiable_type', 'data', 'created_at', 'read_at')
+                                ->latest()
+                                ->take(50); 
+                        },
+                        'readNotifications' => function ($query) { 
+                            $query
+                                ->select('id', 'notifiable_id', 'notifiable_type', 'data', 'created_at', 'read_at')
+                                ->latest()
+                                ->take(50); 
+                        }
                     ]
-                ]) : null
-            ],
+                );
+                return $user ? [
+                        'user' => $user,
+                ] : null;
+            },
             'permissions' => [
                 'create_posts' => $request->user()?->can('create', Post::class)
             ],

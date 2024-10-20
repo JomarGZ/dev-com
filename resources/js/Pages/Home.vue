@@ -6,9 +6,9 @@
                 <SectionWrapper>
                         <img src="https://picsum.photos/seed/picsum/200/100" class="w-full">
                         <div class="px-[25px] py-0">
-                            <img src="https://picsum.photos/90/90" class="w-[90px] h-[90px] rounded-full bg-white p-[4px] mt-[-45px]">
-                            <h1 class="text-[20px] font-semibold text-[#222]">{{ user.name }}</h1>
-                            <h3 class="text-[14px] font-medium text-[#777]">{{ user.profile.headline }}</h3>
+                            <img :src="$page.props.auth.user.profile_photo_url" class="w-[90px] h-[90px] rounded-full bg-white p-[4px] mt-[-45px]">
+                            <h1 class="text-[20px] font-semibold text-[#222]">{{ $page.props.auth.user.name }}</h1>
+                            <h3 class="text-[14px] font-medium text-[#777]">{{ $page.props.auth.user.profile.headline }}</h3>
                             <ul class="list-none my-5">
                                 <li class="w-full my-[5px] text-[13px]">Your profile views <span class="float-right text-[#045be6]">24</span></li>
                                 <li class="w-full my-[5px] text-[13px]">Your post views <span class="float-right text-[#045be6]">128</span></li>
@@ -119,7 +119,7 @@ import SectionWrapper from '@/Components/SectionWrapper.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 
 
-const props = defineProps(['user', 'posts', 'title']);
+const props = defineProps(['posts', 'title']);
 
  
 </script>

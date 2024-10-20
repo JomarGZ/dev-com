@@ -17,14 +17,10 @@ class HomeController extends Controller
      */
     public function __invoke()
     {
-        $user = auth()->user()->load(['profile' => function ($query) {
-            $query->select('headline', 'user_id');
-        }]);
         $posts = Post::latest()->latest('id')->paginate();
-        $posts->load(['user', 'topic']);
+        $posts->load(['topic', 'user']);
         
         return inertia('Home', [
-            'user' => UserResource::make($user),
             'posts' => fn () => $posts ? PostResource::collection($posts) : null,
             'title' => 'Home'
         ]);

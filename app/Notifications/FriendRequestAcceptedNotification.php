@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -26,7 +27,7 @@ class FriendRequestAcceptedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -49,7 +50,12 @@ class FriendRequestAcceptedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'info' => [
+                'profile_photo_url' => $this->recipient->profilePhotoUrl,
+                'name'              => $this->recipient->name,
+                'message'           => "Accepted your friend request",
+                'link'              => $this->recipient->showRoute()
+            ]
         ];
     }
 }
