@@ -47,7 +47,7 @@
                 
             </div>
             <div class="flex-[0_0_47%]"> 
-                <post-form :profile_photo_url="$page.props.auth.user.profile_photo_url"/>
+                <post-form />
                 <div class="flex items-center my-[10px]">
                     <hr class="flex-1 border-0 h-[1px] bg-[#ccc]">
                     <p class="text-[13px] pl-[5px]">Sort by : <span class="font-semibold cursor-pointer">top <img src="" class="w-[12px] ml-[3px]" ></span> </p>
@@ -97,8 +97,7 @@
                     </div>
                 </div>
             </div>
-    </div>
-
+        </div>
     </AppLayout>
 </template>
 
@@ -106,9 +105,6 @@
 import PostPanel from '@/Components/PostPanel.vue';
 import SectionWrapper from '@/Components/SectionWrapper.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import PostForm from '@/Components/PostForm.vue';
-
+import PostForm from '@/Components/Post/PostForm.vue';
 const props = defineProps(['posts', 'title']);
-
- 
 </script>
