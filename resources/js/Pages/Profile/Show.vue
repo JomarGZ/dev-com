@@ -12,21 +12,21 @@
                         <i class="fas fa-pen text-gray-600"></i>
                     </div>
                     <div class="absolute -bottom-16 left-4">
-                        <img src="https://picsum.photos/seed/picsum/100/100" alt="Profile" class="w-32 h-32 rounded-full border-4 border-white">
+                        <img :src="user.profile_photo_url" alt="Profile" class="w-32 h-32 rounded-full border-4 border-white">
                     </div>
                 </div>
                 <div class="pt-20 px-4 pb-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h1 class="text-2xl font-bold">{{ props.user.name }}</h1>
-                            <p class="text-gray-600">{{ props.user.profile.headline }}</p>
-                            <p class="text-gray-500 text-sm mt-1">{{props.user.profile.address}}· <a href="#" class="text-blue-600">Contact info</a></p>
+                            <h1 class="text-2xl font-bold">{{ user.name }}</h1>
+                            <p class="text-gray-600">{{ user.profile.headline }}</p>
+                            <p class="text-gray-500 text-sm mt-1">{{user.profile.address}}· <a href="#" class="text-blue-600">Contact info</a></p>
                             <p class="text-blue-600 mt-1">316 connections</p>
                         </div>
                         <div class="flex items-center space-x-2">
-                           <Status :user="props.user" :isFriendWith="props.status.isFriendWith" :friendRequestSentTo="props.status.friendRequestSentTo" :friendRequestReceivedFrom="props.status.friendRequestReceivedFrom"/>
+                           <Status :user="user" :isFriendWith="status.isFriendWith" :friendRequestSentTo="status.friendRequestSentTo" :friendRequestReceivedFrom="status.friendRequestReceivedFrom"/>
                             <!-- <button class="border border-blue-600 text-blue-600 px-4 py-1 rounded-full">Add profile section</button> -->
-                            <Link v-if="props.user.can.edit" :href="route('profiles.edit')" class="border border-gray-300 text-gray-600 px-4 py-1 rounded-full">Edit</Link>
+                            <Link v-if="user.id === $page.props.auth.user.id" :href="route('profiles.edit')" class="border border-gray-300 text-gray-600 px-4 py-1 rounded-full">Edit</Link>
                         </div>
                     </div>
                 </div>
@@ -76,6 +76,7 @@
 <script setup>
 import Status from '@/Components/FriendStatus/Status.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
+import { Link } from '@inertiajs/vue3';
 import slugify from 'slugify';
 import { computed} from 'vue';
 const props = defineProps(['user', 'status']);
