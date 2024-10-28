@@ -20,25 +20,15 @@ use function Pest\Laravel\get;
 it('requires authentication', function () {
     get(route('home'))
         ->assertRedirect(route('login'));
-})->skip();
-
-it('has profile data in the view', function() {
-
-    $user = User::factory()->withProfile()->create();
-    $user->load('profile');
-    actingAs($user)
-        ->get(route('home'))
-        ->assertHasResource('user', UserResource::make($user));
-})->skip();
-
+});
 
 it('has paginated posts data in the view', function() {
     $profile = Profile::factory()->create();
     $profile->load('user');
     $posts = Post::factory(3)->create();
-    $posts->load(['user', 'topic']);
-
+  
+    $posts->load(['user']);
     actingAs($profile->user)
         ->get(route('home'))
         ->assertHasPaginatedResource('posts', PostResource::collection($posts->reverse()));
-})->skip();
+});

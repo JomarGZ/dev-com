@@ -52,7 +52,7 @@ class ProfileController extends Controller
         if (! Str::endsWith($user->showRoute(), $request->path())) {
                 return redirect($user->showRoute($request->query()), 301);
         }
-        $user->load(['profile:country,city,headline']);
+        $user->load('profile:id,user_id,headline,city,country');
         $authUser = auth()->user();
         return inertia('Profile/Show', [
             'user' => UserResource::make($user),

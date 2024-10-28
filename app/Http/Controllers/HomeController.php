@@ -3,12 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
-use App\Http\Resources\ProfileResource;
-use App\Http\Resources\UserResource;
 use App\Models\Post;
-use App\Models\Profile;
-use App\Models\User;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -17,12 +12,14 @@ class HomeController extends Controller
      */
     public function __invoke()
     {
-        $posts = Post::latest()->latest('id')->paginate();
-        $posts->load(['topic', 'user']);
-        
+        $posts = Post::select('id', 'body', 'user_id', 'created_at', 'updated_at')
+            ->with('user:id,name,profile_photo_path,created_at,updated_at')
+            ->latest()
+            ->latest('id')
+            ->paginate(10);
         return inertia('Home', [
-            'posts' => fn () => $posts ? PostResource::collection($posts) : null,
-            'title' => 'Home'
+            'title' => 'Home',
+            'posts' => fn () => PostResource::collection($posts)
         ]);
     }
 }

@@ -24,17 +24,6 @@ const menu = [
         when: () => page.props.auth.user
     },
     {
-        name : "Posts",
-        url: route('posts.index'),
-        route: 'posts.index'
-    },
-    {
-        name : "Create a Post",
-        url: route('posts.create'),
-        route: 'posts.create',
-        when: () => page.props.permissions.create_posts
-    },
-    {
         name : "Networks",
         url: route('friends.index'),
         route: 'friends.index',
@@ -213,7 +202,7 @@ const search = () => {
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :active="route().current('profiles.show')">
+                            <ResponsiveNavLink href="#" :active="route().current('profiles.show')">
                                 Profile
                             </ResponsiveNavLink>
 

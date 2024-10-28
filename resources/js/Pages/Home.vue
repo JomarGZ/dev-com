@@ -54,14 +54,12 @@
 
                 </div>
                 <div>
-                    <SectionWrapper v-for="post in posts.data" :key="post.id" class="py-[20px] px-[25px] pb-[5px] my-[5px] mb-[15px]">
-                       <PostPanel :post="post"/>
-                    </SectionWrapper>
+                   <post-list :posts="posts"/>
                 </div>
             </div>
             <div class="basis-[25%] self-start sticky top-[73px]">
                 <SectionWrapper class="p-[10px_25px]">
-                    <img src="images/more.png" class="w-[15px] float-right mt-[15px]">
+                    <img src="" class="w-[15px] float-right mt-[15px]">
                     <h3 class="text-[18px] font-semibold text-[#333] mt-[10px] mb-[30px]">Trending News</h3>
                     <a href="#" class="block text-[12px] font-semibold mt-[10px] mb-[-5px]">High Demand for Skilled Employees</a>
                     <span class="text-[12px]">1d ago &middot; 10,934 readers</span>
@@ -78,7 +76,7 @@
                     <p class="mt-[30px] mb-[10px]">Master Web Development</p>
                     <div>
                         <img src="" class="w-[60px] rounded-full m-[4px]">
-                        <img src="images/mi-logo.png" class="w-[60px] rounded-full m-[4px]">
+                        <img src="" class="w-[60px] rounded-full m-[4px]">
                     </div>
                     <b class="block font-medium mt-[10px]">Brand and Demand in Xiaomi</b>
                     <a href="#" class="inline-block border border-[#045be6] rounded-[30px] p-[5px_15px] text-[#045be6] font-medium mt-[20px] mb-[10px] mx-auto">Learn More</a>
@@ -92,7 +90,7 @@
                     <a href="#" class="inline-block text-[14px] m-[4px_2px]">Get the App</a>
                     <a href="#" class="inline-block text-[14px] m-[4px_2px]">More</a>
                     <div class="flex items-center justify-center text-[12px] mt-[10px] font-medium">
-                        <img src="images/logo.png" class="w-[18px] mr-[4px]">
+                        <img src="" class="w-[18px] mr-[4px]">
                         <p>Linkedin &#169; 2022. All Rights Reserved</p>
                     </div>
                 </div>
@@ -102,7 +100,7 @@
 </template>
 
 <script setup>
-import PostPanel from '@/Components/PostPanel.vue';
+import PostList from '@/Components/Post/PostList.vue';
 import SectionWrapper from '@/Components/SectionWrapper.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PostForm from '@/Components/Post/PostForm.vue';

@@ -24,8 +24,8 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $loadedProfile = $this->whenLoaded('profile');
-        $profile = $loadedProfile ? ProfileResource::make($loadedProfile) : $this->defaultProfile;
+        // $loadedProfile = $this->whenLoaded('profile');
+        // $profile = $loadedProfile ? ProfileResource::make($loadedProfile) : $this->defaultProfile;
 
         return [
             'id' => $this->id,
@@ -34,7 +34,7 @@ class UserResource extends JsonResource
             'profile_photo_url' => $this->profile_photo_url,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'profile' => $profile,
+            'profile' => ProfileResource::make($this->whenLoaded('profile')),
             'can' => [
                 'edit' => $this->id === $request->user()?->id ? true : false
             ],

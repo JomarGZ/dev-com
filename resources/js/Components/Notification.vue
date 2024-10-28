@@ -38,7 +38,7 @@
 import { ref } from 'vue'
 import NotificationItem from './NotificationItem.vue';
 import axios from 'axios';
-import { useFlash } from '@/composables/useFlash';
+import { useFlash } from '@/Utilities/Composables/useFlash';
 const props = defineProps(['notifications', 'unread', 'read']);
 
 const isOpen = ref(false);
