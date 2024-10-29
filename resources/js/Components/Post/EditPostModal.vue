@@ -1,22 +1,32 @@
 <script setup>
 import Modal from "@/Components/Modal/Modal.vue";
 import LoadingPrimaryButton from "@/Components/Buttons/LoadingPrimaryButton.vue";
-import { ref, watch } from "vue";
-import { useForm } from "@inertiajs/vue3";
+import { ref, watch, watchEffect } from "vue";
+import { router, useForm } from "@inertiajs/vue3";
 import { useFlash } from "@/Utilities/Composables/useFlash";
-const props = defineProps({
-    btn_name: {
-        type: String,
-        Required: true
-    },
-})
+import axios from "axios";
+const props = defineProps(['btn_name', 'postId']);
 
 const { toast } = useFlash();
 const showModal = ref(false);
-
 const form = useForm({
     body: ''
 });
+
+watch(showModal, async () => {
+    if (showModal.value === true) {
+        if (!props.postId) {
+            console.error('Post ID is required to process deletion');
+            return;
+        }
+        const res = await axios.get(route('posts.edit', props.postId))
+        form.body = res.data.body;
+           
+    } else {
+        form.reset();
+    }
+});
+
 const disabledBtn = ref(true);
 
 watch(form, () => {
@@ -27,26 +37,30 @@ watch(form, () => {
     }
 })
 
-const addPostRequest = () => {
-    return form.post(route('posts.store'), {
+const UpdatePostRequest = (postId) => {
+    if (!postId) {
+        console.error('Post ID is required on updating the post');
+        return;
+    }
+    return form.put(route('posts.update', postId), {
         onSuccess: () => {
             toast({
-                title: 'Post added successfuly'
+                title: 'Post update successfuly'
             });
             form.reset();
             showModal.value = false;
         },
         onError: (err) => {
-            console.error('Error on add post', err);
+            console.error('Error on update post', err);
             toast({
                 icon: 'error',
-                title : 'Failed to add post'
+                title : 'Failed to update post'
             })
         }
     });
 }
-const submit = () => {
-    addPostRequest();
+const submit = async () => {
+    await UpdatePostRequest(props.postId);
 }
 
 </script>
@@ -55,7 +69,7 @@ const submit = () => {
         @click="showModal = true" 
         :class="$attrs.class"
     >
-    {{ btn_name }}
+    {{ btn_name ? btn_name : 'Open Modal' }}
     </button>
     <teleport to="body">
         <Modal :show="showModal" @close="showModal = false">
@@ -76,7 +90,6 @@ const submit = () => {
                                 <p class="text-red-600 bg-red-100 text-center rounded-sm text-sm p-1">{{ form.errors.body }}</p>
                             </div>
                         </div>
-                        
                     </div>
                 </template>
                 <template #default>
@@ -117,7 +130,7 @@ const submit = () => {
                         <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" fill="currentColor"/>
                         </svg>
                     </button>
-                    <loading-primary-button @click="submit()" :disabled="disabledBtn" :processing="form.processing" label="Post"/>
+                    <loading-primary-button @click="submit()" :disabled="disabledBtn" :processing="form.processing" label="Update Post"/>
                 </template>
         </Modal>
     </teleport>

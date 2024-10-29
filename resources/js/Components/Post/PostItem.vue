@@ -1,7 +1,7 @@
 <script setup>
 import SectionWrapper from '../SectionWrapper.vue';
 import { relativeDate } from '@/Utilities/Date';
-import AddPostModal from './AddPostModal.vue';
+import EditPostModal from './EditPostModal.vue';
 import Icon from '../Icon.vue';
 const props = defineProps({
     post:Object
@@ -19,10 +19,10 @@ const deletePost = (postId) => {
                 <button v-if="post.can.delete" @click="deletePost(post.id)" class="hover:bg-gray-200 p-2 rounded-full">
                     <Icon name="x-close"/>
                 </button>
-                <add-post-modal 
+                <edit-post-modal 
                     v-if="post.can.edit" 
-                    :editPost="true" 
-                    btn_name="Edit" 
+                    btn_name="Edit"
+                    :postId="post.id" 
                     class="hover:bg-gray-200 p-2 rounded-full"
                 />
             </div>

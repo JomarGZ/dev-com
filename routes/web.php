@@ -48,11 +48,8 @@ Route::middleware([
         Route::delete('{user}/delete', [FriendController::class, 'destroy'])->name('destroy');
         Route::delete('{user}/deny', [FriendController::class, 'deny'])->name('deny');
     });
-
-    Route::prefix('posts')->group(function () {
-        Route::post('', [PostController::class, 'store'])->name('posts.store');
-        Route::delete('{post}', [PostController::class, 'destroy'])->name('posts.destroy');
-    });
+       
+    Route::resource('/posts', PostController::class)->only(['store', 'edit', 'update', 'destroy']);
     
     Route::get('cities', [LocationController::class, 'getCities'])->name('get.cities');
 

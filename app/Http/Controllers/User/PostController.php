@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -13,9 +14,13 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        auth()->user()->posts()->create($request->validate([
+        $this->validate($request, [
             'body' => ['required', 'max:2500']
-        ]));
+        ]);
+        
+        auth()->user()->posts()->create([
+            'body' => $request->body
+        ]);
 
         return back();
     }
@@ -31,17 +36,27 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        //
+        $this->authorize('update', $post);
+        return response()->json(PostResource::make($post));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $this->authorize('update', $post);
+        
+        $this->validate($request, [
+            'body' => ['required', 'max:2500']
+        ]);
+
+        $post->update([
+            'body' => $request->body
+        ]);
+        return back();
     }
 
     /**
@@ -51,6 +66,6 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post);
         $post->delete();
-        return redirect()->route('home');
+        return back();
     }
 }

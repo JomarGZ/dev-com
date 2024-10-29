@@ -7,8 +7,8 @@ const props = defineProps(['posts']);
 
 const { confirmFlash2, toast } = useFlash();
 
-const deleteR = (postId) => {
-    return  router.delete(route('posts.destroy', postId), {
+const deleteR = async (postId) => {
+    return await router.delete(route('posts.destroy', postId), {
         onSuccess: () => {
             toast({
                 icon: 'success',
@@ -23,14 +23,11 @@ const deleteR = (postId) => {
         }
     });
 }
-const deletePost = (postId) => {
-    confirmFlash2({
+const deletePost = async (postId) => {
+   await confirmFlash2({
         entityId: postId,
         deleteAction: deleteR
-    })
-}
-const edit = (option) => {
-    console.log(option);
+    });
 }
 </script>
 <template>
