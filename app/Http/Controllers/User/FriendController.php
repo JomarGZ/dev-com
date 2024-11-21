@@ -22,7 +22,8 @@ class FriendController extends Controller
         $query = $request->query('userQuery');
         if ($query) {
             $users = User::search($query)
-                        ->paginate(20)->withQueryString(); // Perform search with Scout
+                ->paginate(20)
+                ->withQueryString(); // Perform search with Scout
         }
         return inertia('Network/Index',[
             'users' => fn () => (isset($users) && !empty($users)) 

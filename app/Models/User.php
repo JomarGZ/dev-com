@@ -24,7 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use Searchable;
     use Friendable;
 
-    
+    // protected $with = ['profile'];
     /**
      * The attributes that are mass assignable.
      *
@@ -95,22 +95,6 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Post::class);
     }
-
-    /**
-     * Get all of the comments for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function comments(): HasMany
-    {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function likes(): HasMany
-    {
-        return $this->hasMany(Like::class);
-    }
-
 
     public function showRoute($parameters = []) 
     {

@@ -2,7 +2,6 @@
 
 use App\Models\Friend;
 use App\Models\User;
-use Illuminate\Support\Facades\Config;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\delete;

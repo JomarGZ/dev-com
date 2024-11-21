@@ -19,8 +19,10 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <h1 class="text-2xl font-bold">{{ user.name }}</h1>
-                            <p class="text-gray-600">{{ user.profile.headline }}</p>
-                            <p class="text-gray-500 text-sm mt-1">{{user.profile.address}}· <a href="#" class="text-blue-600">Contact info</a></p>
+                            <template v-if="user.profile">
+                                <p class="text-gray-600">{{ user.profile.headline }}</p>
+                                <p class="text-gray-500 text-sm mt-1">{{user.profile.address}}· <a href="#" class="text-blue-600">Contact info</a></p>
+                            </template>
                             <p class="text-blue-600 mt-1">316 connections</p>
                         </div>
                         <div class="flex items-center space-x-2">
